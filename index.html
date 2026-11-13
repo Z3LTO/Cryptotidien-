@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cryptotidien</title>
+<meta name="description" content="Cryptotidien : l'essentiel de l'actu crypto chaque matin, vérifié dans plusieurs sources et expliqué simplement. Zéro hype, zéro promesse de gains.">
+<meta property="og:title" content="Cryptotidien · L'essentiel de la crypto, vérifié">
+<meta property="og:description" content="L'actu crypto du jour, recoupée et expliquée simplement. Contenu informatif, pas un conseil en investissement.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/unbounded-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/unbounded-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/unbounded-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/unbounded-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/manrope-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/manrope-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/manrope-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/manrope-latin-700-normal.woff2) format('woff2')}
+/* One visual world: black glass lit by lime and violet. Four views on the hash: home, actus, premium, compte. */
+:root{
+  --deep:#050507; --night:#0A0A10; --panel:#111119; --line:#25253A; --violet:#8B5CFF;
+  --gold:#C6FF3D; --paper:#F5F5F7; --mist:#A0A0B8; --up:#3FD38A; --down:#FF6B6B;
+  --glass:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.015)); --gline:rgba(255,255,255,.1);
+  --display:'Unbounded','Arial Black',system-ui,sans-serif; --body:'Manrope',system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;color:var(--paper);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--gold)}
+h1,h2,h3{font-family:var(--display);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.04em}
+h2{font-size:clamp(26px,4vw,48px);line-height:1.08;text-transform:uppercase}
+h3{font-size:clamp(18px,2.2vw,24px);line-height:1.2;text-transform:uppercase}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.lead{color:var(--mist);max-width:60ch;margin:0}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.page{animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+section{padding:84px 0}
+.head{display:flex;flex-direction:column;gap:12px;margin-bottom:34px}
+.glass{position:relative;background:var(--glass);border:1px solid var(--gline);border-radius:26px;overflow:hidden;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.glass::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,-40%),rgba(139,92,255,.2),transparent 60%);pointer-events:none}
+.glass > *{position:relative}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:14px 22px;font-weight:700;font-size:16px;text-decoration:none;border:1px solid transparent;transition:transform .15s,background .15s;background:none}
+.btn:active{transform:scale(.97)}
+.btn.lime{background:var(--gold);color:#050507;box-shadow:0 0 34px -6px rgba(198,255,61,.6)}
+.btn.lime:hover{background:#d8ff70}
+.btn.ghost{border-color:rgba(255,255,255,.22);color:var(--paper);background:rgba(255,255,255,.04)}
+.btn.ghost:hover{background:rgba(255,255,255,.1)}
+.btn.sm{padding:9px 15px;font-size:14px}
+
+/* floating bar + small menu */
+.fbar{position:fixed;top:14px;left:14px;right:14px;z-index:60;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.fbar > *{pointer-events:auto}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;text-transform:uppercase;color:var(--paper);text-decoration:none;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(10,10,16,.6);border:1px solid var(--gline);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.logo b{color:var(--gold)}
+.mbtn{display:flex;align-items:center;gap:9px;padding:9px 15px 9px 13px;border-radius:999px;background:rgba(10,10,16,.6);border:1px solid var(--gline);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-weight:700;font-size:14px}
+.mbtn .av{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#050507;display:grid;place-items:center;font-size:12px;font-weight:800}
+.menu{position:fixed;top:66px;right:14px;z-index:61;width:min(320px,calc(100vw - 28px));padding:10px;border-radius:24px;background:rgba(14,14,22,.92);border:1px solid var(--gline);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);transform-origin:top right;animation:pop .18s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.menu a{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;text-decoration:none;color:var(--paper);font-weight:600}
+.menu a:hover,.menu a[aria-current="page"]{background:rgba(255,255,255,.07)}
+.menu a small{color:var(--mist);font-weight:500;font-size:12.5px}
+.menu .sep{height:1px;background:var(--gline);margin:6px 8px}
+.menu .who{padding:10px 14px 4px;font-size:13px;color:var(--mist)}
+.tag{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:rgba(198,255,61,.14);color:var(--gold)}
+.tag.free{background:rgba(255,255,255,.08);color:var(--mist)}
+
+/* hero */
+#hero{position:relative;min-height:min(720px,88svh);display:flex;align-items:flex-start;overflow:hidden;background:radial-gradient(60% 60% at 78% 38%,rgba(139,92,255,.38) 0%,transparent 60%),radial-gradient(40% 45% at 60% 80%,rgba(198,255,61,.14) 0%,transparent 70%)}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+#hero .wrap{position:relative;width:100%;pointer-events:none;padding-top:108px;padding-bottom:64px}
+#scene{pointer-events:none}
+.hero-txt{max-width:600px;display:flex;flex-direction:column;gap:22px;pointer-events:auto}
+h1{font-size:clamp(34px,6vw,78px);line-height:1;font-weight:800;text-transform:uppercase}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--gold),#7CFFB2 45%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.mine{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(17,17,25,.55);backdrop-filter:blur(8px);max-width:440px}
+.mine small{color:var(--mist);font-size:13.5px;line-height:1.45}
+.mine code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--gold);overflow-wrap:anywhere}
+.nogl #scene,.nogl .wtip{display:none}
+#hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--deep) 0%,rgba(5,5,7,.75) 28%,transparent 62%);pointer-events:none}
+#hero .wrap{z-index:1}
+.wtip{position:absolute;right:20px;bottom:18px;z-index:2;font-size:12.5px;color:var(--mist);background:rgba(10,10,16,.6);border:1px solid var(--gline);padding:5px 12px;border-radius:999px;pointer-events:none;backdrop-filter:blur(8px)}
+.tmob{display:none}
+@media (max-width:820px){.tdesk{display:none}.tmob{display:inline}#hero::after{display:none}.wtip{top:330px;bottom:auto;right:50%;transform:translateX(50%);white-space:nowrap}}
+
+.ticker{border-block:1px solid var(--gline);background:rgba(10,10,16,.8);overflow:hidden}
+.ticker div{display:flex;gap:48px;width:max-content;padding:13px 0;animation:tick 38s linear infinite;font-variant-numeric:tabular-nums}
+.ticker:hover div{animation-play-state:paused}
+.ticker span{white-space:nowrap;color:var(--mist);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.ticker b{color:var(--gold);font-family:var(--display);margin-left:8px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* numbers + brief */
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px}
+.nums div{padding:18px 20px;border-radius:22px;background:var(--glass);border:1px solid var(--gline)}
+.nums small{display:block;color:var(--mist);font-size:13px}
+.nums b{font-family:var(--display);font-size:21px;color:var(--gold);font-variant-numeric:tabular-nums}
+.nums a{font-size:12px;color:var(--mist)}
+@media (min-width:821px){.nums{grid-template-columns:1.5fr 1fr 1fr 1.2fr}.nums div:first-child{background:var(--gold);border-color:var(--gold)}.nums div:first-child *{color:#050507}.nums div:first-child b{font-size:32px}}
+.brief{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.brief a{display:flex;flex-direction:column;gap:10px;padding:20px;text-decoration:none;color:var(--paper);min-height:190px;transition:border-color .15s,transform .2s}
+.brief a:hover{border-color:rgba(198,255,61,.5);transform:translateY(-3px)}
+.brief i{font-style:normal;font-family:var(--display);font-size:13px;color:var(--gold)}
+.brief b{font-weight:700;font-size:17px;line-height:1.3}
+.brief span{color:var(--mist);font-size:14.5px;line-height:1.5}
+.brief em{margin-top:auto;font-style:normal;font-size:13.5px;font-weight:700;color:var(--gold)}
+.row-end{display:flex;justify-content:flex-end;margin-top:18px}
+
+/* offer */
+.offer{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:14px}
+.offer .glass{padding:30px}
+.price{display:flex;align-items:baseline;gap:8px;margin:6px 0 4px}
+.price b{font-family:var(--display);font-size:clamp(44px,6vw,64px);letter-spacing:-.05em;line-height:1;background:linear-gradient(90deg,var(--gold),#7CFFB2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.price span{color:var(--mist);font-weight:600}
+.incl{list-style:none;margin:18px 0 22px;padding:0;display:flex;flex-direction:column;gap:12px}
+.incl li{display:flex;gap:12px;align-items:flex-start}
+.incl li::before{content:"";flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3 3 7-7' fill='none' stroke='%23050507' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.months{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.months div{border:1px solid var(--gline);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.35;color:var(--mist);background:rgba(255,255,255,.02)}
+.months div b{display:block;font-family:var(--display);font-size:11.5px;color:var(--gold);letter-spacing:.04em}
+.months div.on{border-color:var(--gold);color:var(--paper);background:rgba(198,255,61,.07)}
+.months div.done{color:var(--paper)}
+.months div.done b::after{content:" ✓"}
+
+/* forms */
+.form{display:flex;flex-direction:column;gap:14px}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;color:var(--mist)}
+.form input[type=text],.form input[type=email]{background:rgba(5,5,7,.6);border:1px solid var(--gline);border-radius:14px;padding:13px 15px;font-size:16px;color:var(--paper);outline:none}
+.form input:focus{border-color:var(--gold)}
+.form .chk{flex-direction:row;align-items:flex-start;gap:10px;font-weight:500;line-height:1.4}
+.form .chk input{width:18px;height:18px;accent-color:var(--gold);margin-top:2px;flex:none}
+.err{color:var(--down);font-size:14px;margin:0}
+.demo{font-size:13px;color:var(--mist);margin:0;padding:10px 12px;border-radius:12px;border:1px dashed rgba(255,255,255,.18)}
+.signup{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+.signup > div{padding:32px}
+.signup .side{background:radial-gradient(80% 90% at 0% 0%,rgba(139,92,255,.28),transparent 70%);display:flex;flex-direction:column;gap:16px;justify-content:center}
+
+/* articles */
+.art{padding:30px;display:flex;flex-direction:column;gap:14px;margin-bottom:14px;scroll-margin-top:90px}
+.art p{margin:0;max-width:68ch}
+.why{border-left:3px solid var(--gold);padding-left:14px}
+.why b{display:block;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.src{display:flex;gap:8px;flex-wrap:wrap;font-size:13.5px}
+.src a{border:1px solid var(--gline);border-radius:999px;padding:4px 11px;text-decoration:none;color:var(--mist)}
+.src a:hover{color:var(--gold);border-color:var(--gold)}
+.fine{font-size:13px;color:var(--mist);margin:0}
+.back{display:inline-flex;margin-bottom:22px;font-weight:700;text-decoration:none;font-size:15px}
+
+/* premium */
+.ptop{padding-top:110px}
+.pgrid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:14px;align-items:start}
+.pgrid .glass{padding:28px}
+.agenda{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column}
+.agenda li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--gline);font-size:15px}
+.agenda li:last-child{border:0}
+.agenda b{font-family:var(--display);font-size:12.5px;color:var(--gold);line-height:1.6}
+.points{list-style:none;margin:18px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;counter-reset:p}
+.points li{counter-increment:p;padding:20px;border-radius:20px;background:rgba(5,5,7,.5);border:1px solid var(--gline);display:flex;flex-direction:column;gap:8px}
+.points li::before{content:"0" counter(p);font-family:var(--display);color:var(--gold);font-size:14px}
+.points b{font-size:16.5px;line-height:1.3}
+.points span{color:var(--mist);font-size:14.5px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{text-align:left;border:1px solid var(--gline);background:rgba(5,5,7,.55);border-radius:14px;padding:14px 16px;font-size:16px;transition:border-color .15s,background .15s}
+.opts button:hover:not(:disabled){border-color:var(--gold)}
+.opts button.good{border-color:var(--up);background:rgba(63,211,138,.12)}
+.opts button.bad{border-color:var(--down);background:rgba(255,107,107,.12)}
+.dots{display:flex;gap:6px}
+.dots i{width:34px;height:5px;border-radius:5px;background:var(--line)}
+.dots i.on{background:var(--gold)}
+.quiz{display:flex;flex-direction:column;gap:16px}
+.quiz h4{font-size:20px;line-height:1.3;margin:0}
+.locked{position:relative}
+.locked .blur{filter:blur(7px);opacity:.45;pointer-events:none;user-select:none}
+.locked .gate{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:40px}
+.gate .glass{max-width:460px;padding:30px;display:flex;flex-direction:column;gap:14px;background:rgba(14,14,22,.92)}
+.prog{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#7CFFB2)}
+
+/* lexique + simulator (home) */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.flip{perspective:1000px;height:200px;background:none;border:0;padding:0;text-align:left}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d;display:block}
+.flip[aria-pressed="true"] .in{transform:rotateY(180deg)}
+.flip .f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,#1a1a26,#101018)}
+.flip .f.back{transform:rotateY(180deg);background:linear-gradient(140deg,var(--gold),#7CFFB2);color:#050507;border-color:var(--gold);font-size:15.5px;font-weight:600;line-height:1.45;justify-content:center}
+.flip h3{font-size:20px}
+.flip .n{font-family:var(--display);color:var(--gold);font-size:14px}
+.flip .t{color:var(--mist);font-size:13.5px}
+.sim{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.sim > div{padding:30px}
+.sim .out{background:rgba(5,5,7,.45);border-left:1px solid var(--gline);display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;font-size:14.5px;color:var(--mist)}
+.field output{font-family:var(--display);font-weight:500;color:var(--paper);font-size:15px;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--gold);border:4px solid var(--night);box-shadow:0 0 0 1px var(--gold)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--gold);border:4px solid var(--night)}
+.state{align-self:flex-start;font-weight:700;font-size:14px;padding:5px 12px;border-radius:999px}
+.state.ok{background:rgba(63,211,138,.14);color:var(--up)}.state.ko{background:rgba(255,107,107,.16);color:var(--down)}
+.gauge{position:relative;height:46px;border-radius:12px;background:linear-gradient(90deg,rgba(63,211,138,.22),rgba(255,107,107,.3));overflow:hidden}
+.gauge .fill{position:absolute;inset:0 auto 0 0;background:rgba(244,241,234,.16);border-right:2px solid var(--paper);transition:width .2s}
+.gauge .mark{position:absolute;top:0;bottom:0;width:3px;background:var(--gold);transition:left .2s}
+.gauge .mark::after{content:"liquidation";position:absolute;top:4px;left:7px;font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap}
+.gauge .mark.left::after{left:auto;right:7px}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.big small{display:block;color:var(--mist);font-size:13px}
+.big b{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:18px}
+.modal .glass{width:min(480px,100%);padding:30px;background:rgba(16,16,24,.96);display:flex;flex-direction:column;gap:16px;max-height:calc(100vh - 36px);overflow:auto}
+.modal .x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--gline);background:none;font-size:18px;line-height:1}
+.line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--gline)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:90;background:var(--gold);color:#050507;font-weight:700;padding:11px 18px;border-radius:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{padding:36px 0 48px;color:var(--mist);font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  section{padding:60px 0}
+  #hero{display:block;min-height:0}
+  #scene{position:absolute;inset:0;height:100%;opacity:.8}
+  #hero .wrap{padding-top:96px;padding-bottom:56px}
+  .offer,.signup,.pgrid{grid-template-columns:1fr}
+  .months{grid-template-columns:repeat(2,1fr)}
+  .sim .out{border-left:0;border-top:1px solid var(--gline)}
+  .signup > div,.offer .glass,.pgrid .glass,.art,.sim > div{padding:22px}
+  .agenda li{grid-template-columns:80px 1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker div,.page,.menu{animation:none}.flip .in{transition:none}}
+
+/* ---- Subscriber dashboard ---- */
+#dash{display:none}
+.isPrem #dash{display:block}
+.isPrem #resume,.isPrem #offre,.isPrem #inscription{display:none}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ind{padding:20px 22px;display:flex;flex-direction:column;gap:8px;min-height:168px}
+.ind small{color:var(--mist);font-size:13px}
+.ind b{font-family:var(--display);font-size:28px;font-variant-numeric:tabular-nums;line-height:1.05}
+.ind .d{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.ind .d.up{color:var(--up)}.ind .d.dn{color:var(--down)}.ind .d.nt{color:var(--mist)}
+.ind p{margin:auto 0 0;font-size:13.5px;color:var(--mist);line-height:1.45}
+.ind a{font-size:11.5px;color:var(--mist);opacity:.75}
+.ind.big{grid-column:span 2;grid-row:span 2;min-height:0;justify-content:center}
+.ind.wide{grid-column:span 2}
+.ind.full{grid-column:1/-1;min-height:0}
+.ind.big .fg{margin-top:18px}
+.isPrem #hTitle{font-size:clamp(38px,5.2vw,74px)}
+.fg{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:6px 0}
+.fg svg{width:220px;max-width:100%;height:auto;flex:none}
+.fg .lvl{display:flex;flex-direction:column;gap:4px}
+.fg .lvl b{font-size:54px;color:var(--gold)}
+.dom{height:12px;border-radius:10px;overflow:hidden;display:flex;background:var(--line);margin:6px 0 2px}
+.dom i{display:block;height:100%}
+.domk{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mist)}
+.domk span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px;background:var(--c)}
+.yr{display:flex;flex-direction:column;gap:9px;margin:4px 0}
+.yr div{display:grid;grid-template-columns:70px 1fr 58px;align-items:center;gap:10px;font-size:13.5px}
+.yr em{font-style:normal;height:8px;border-radius:8px;background:var(--line);position:relative;overflow:hidden}
+.yr em i{position:absolute;inset:0 auto 0 0;border-radius:8px}
+.yr span:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.dday{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:12px}
+.dday .glass{padding:26px;display:flex;flex-direction:column;gap:12px}
+.dday h3{margin:0}
+.streak{display:flex;gap:6px}.streak i{flex:1;height:30px;border-radius:8px;background:var(--line)}.streak i.on{background:linear-gradient(180deg,var(--gold),#7CFFB2)}
+.next{font-family:var(--display);font-size:34px;color:var(--gold);line-height:1}
+@media (max-width:1000px){.dgrid{grid-template-columns:repeat(2,1fr)}.dday{grid-template-columns:1fr}}
+@media (max-width:560px){.dgrid{grid-template-columns:1fr}.ind.big,.ind.wide,.ind.full{grid-column:auto;grid-row:auto}.ind b{font-size:26px}.fg svg{width:180px}}
+
+/* DEMO ONLY */.demoBtn{background:transparent;border:1.5px dashed #FF9F5A;color:#FFB47A}.demoBtn:hover{background:rgba(255,159,90,.1)}.demoWrap{margin-top:14px}.menu .demoBtn{width:100%;justify-content:center}
+
+/* ---- Outils ---- */
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.tool{padding:28px;display:flex;flex-direction:column;gap:14px}
+.tool h3{margin:0}.tool .tico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(198,255,61,.12);color:var(--gold);font-weight:800;font-family:var(--display)}
+.tool .hd{display:flex;gap:14px;align-items:center}
+.tin{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tin label{display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:600;color:var(--mist)}
+.tin input,.tin select{background:rgba(5,5,7,.6);border:1px solid var(--gline);border-radius:12px;padding:11px 13px;font-size:16px;color:var(--paper);outline:none;font-variant-numeric:tabular-nums;width:100%}
+.tin input:focus,.tin select:focus{border-color:var(--gold)}
+.tres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tres div{background:rgba(5,5,7,.5);border:1px solid var(--gline);border-radius:14px;padding:12px 14px}
+.tres small{display:block;color:var(--mist);font-size:12.5px}.tres b{font-family:var(--display);font-size:18px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.buys{display:flex;flex-direction:column;gap:8px}
+.buy{display:grid;grid-template-columns:1fr 1fr 34px;gap:8px;align-items:end}
+.buy button{height:44px;border-radius:12px;border:1px solid var(--gline);background:none;color:var(--mist);font-size:18px;cursor:pointer}
+.flags{display:flex;flex-direction:column;gap:8px}
+.flags label{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4;cursor:pointer}
+.flags input{width:18px;height:18px;accent-color:#FF6B6B;margin-top:2px;flex:none}
+.verdict{padding:14px 16px;border-radius:14px;font-weight:700}
+.verdict.ok{background:rgba(63,211,138,.12);color:var(--up)}.verdict.mid{background:rgba(255,159,90,.14);color:#FFB47A}.verdict.ko{background:rgba(255,107,107,.14);color:var(--down)}
+.dtools{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.dtools a{padding:20px;text-decoration:none;color:var(--paper);display:flex;flex-direction:column;gap:6px}
+.dtools a span{color:var(--mist);font-size:13.5px}
+@media (max-width:900px){.tools{grid-template-columns:1fr}.dtools{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.tin{grid-template-columns:1fr}.dtools{grid-template-columns:1fr}}
+.menu .logoutBtn{width:100%;justify-content:center;margin-top:6px}
+/* Version publique : l'offre abonné n'est pas encore ouverte */
+#offre,#inscription,#dash,.demoBtn,.demoWrap{display:none!important}
+footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+<script type="importmap">
+{"imports":{"three":"./vendor/three.module.js"}}
+</script>
+</head>
+<body>
+<div class="fbar">
+  <a class="logo" href="#" aria-label="Cryptotidien, accueil">
+    <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#C6FF3D"/><path d="M52 27 A23 23 0 1 0 52 73" fill="none" stroke="#050507" stroke-width="12"/><path d="M48 33 H82 M65 33 V76" fill="none" stroke="#050507" stroke-width="12"/></svg>
+    <span>Crypto<b>tidien</b></span>
+  </a>
+  <button class="mbtn" id="mbtn" aria-expanded="false" aria-controls="menu"><span id="mav"></span><span id="mlabel">Menu</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+</div>
+<nav class="menu" id="menu" hidden aria-label="Menu principal"></nav>
+
+<!-- ============ HOME ============ -->
+<div class="page" data-page="home">
+<header id="hero">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-txt">
+      <div class="eyebrow" id="hEye">Crypto · Blockchain · Chaque matin</div>
+      <h1 id="hTitle">L'essentiel de la crypto, <em>vérifié</em>.</h1>
+      <p class="lead" style="font-size:19px" id="hLead">L'actu du jour recoupée dans plusieurs sources, et un point formation pour vraiment comprendre l'écosystème. Zéro hype, zéro promesse de gains.</p>
+      <div class="cta" id="heroCta"></div>
+
+    </div>
+  </div>
+</header>
+<div class="ticker" aria-label="Chiffres du jour"><div id="tick"></div></div>
+
+<section id="dash">
+  <div class="wrap">
+    <div class="head"><div class="eyebrow" id="dDate"></div><h2>Tes indicateurs du matin</h2><p class="lead">Les chiffres qui comptent, et ce qu'ils veulent dire. Relevés à l'ouverture, sources en lien.</p></div>
+    <div class="dgrid" id="dGrid"></div>
+    <p class="fine" id="dNote" style="margin-top:14px"></p>
+    <div class="head" style="margin-top:56px"><div class="eyebrow">Ta journée</div><h2>Ce qui t'attend aujourd'hui</h2></div>
+    <div class="dday" id="dDay"></div>
+    <div class="head" style="margin-top:56px"><div class="eyebrow">Réservé aux abonnés</div><h2>Tes outils</h2></div>
+    <div class="dtools">
+      <a class="glass" href="#outils-conv"><b>Convertisseur</b><span>Crypto, dollars et euros au cours du matin.</span></a>
+      <a class="glass" href="#outils-pru"><b>Prix de revient</b><span>Ton prix moyen d'achat et ta plus-value latente.</span></a>
+      <a class="glass" href="#outils-impot"><b>Estimation d'impôt</b><span>La flat tax sur une vente, calculée comme le fisc.</span></a>
+      <a class="glass" href="#outils-arnaque"><b>Détecteur d'arnaque</b><span>8 signaux d'alerte à vérifier avant d'investir.</span></a>
+    </div>
+  </div>
+</section>
+<section id="resume">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow" id="edDate"></div>
+      <h2>Le résumé du jour</h2>
+      <p class="lead">Quatre infos, une ligne chacune. Touche une carte pour lire l'article complet.</p>
+    </div>
+    <div class="nums" id="nums"></div>
+    <div class="brief" id="brief"></div>
+    <div class="row-end"><a class="btn ghost sm" href="#actus">Lire toutes les actus du jour →</a></div>
+  </div>
+</section>
+
+<section id="offre" style="background:linear-gradient(180deg,transparent,rgba(139,92,255,.09),transparent)">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">Cryptotidien+</div>
+      <h2>Un an pour maîtriser l'écosystème.</h2>
+      <p class="lead">Chaque matin à 7 h 30, ton édition abonné en ligne : indicateurs, analyse, leçon du jour et outils exclusifs. Chaque mois, un nouveau thème de formation.</p>
+    </div>
+    <div class="offer">
+      <div class="glass">
+        <span class="tag">Abonnement mensuel</span>
+        <div class="price"><b>6,99 €</b><span>/ mois</span></div>
+        <p class="fine">Sans engagement, résiliable à tout moment.</p>
+        <ul class="incl">
+          <li><span><b>L'édition du matin, dès 7 h 30</b> : tableau de bord d'indicateurs, analyse du jour et agenda.</span></li>
+          <li><span><b>Des outils exclusifs</b> : convertisseur, prix de revient, estimation d'impôt, détecteur d'arnaques.</span></li>
+          <li><span><b>Une leçon par jour</b> : 2 à 3 points essentiels résumés en une minute de lecture.</span></li>
+          <li><span><b>Un quiz par leçon</b> : 2 à 3 questions pour ancrer ce que tu as appris.</span></li>
+          <li><span><b>Un parcours sur 12 mois</b> : des bases jusqu'à la fiscalité, ta progression est suivie.</span></li>
+        </ul>
+        <div id="offerCta"></div>
+      </div>
+      <div class="glass">
+        <h3 style="font-size:16px;margin-bottom:14px">Le parcours sur 12 mois</h3>
+        <div class="months" id="monthsHome"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="inscription">
+  <div class="wrap">
+    <div class="glass signup" id="signupHome"></div>
+  </div>
+</section>
+
+<section id="simulateur">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">Outil gratuit</div>
+      <h2>Le levier, ça liquide à partir de quand ?</h2>
+      <p class="lead">Bouge les curseurs pour voir à quelle baisse une position à effet de levier est fermée de force. Exemple simplifié, hors frais.</p>
+    </div>
+    <div class="glass sim">
+      <div>
+        <div class="field"><label for="sMise">Ta mise <output id="oMise"></output></label><input type="range" id="sMise" min="50" max="5000" step="50" value="500"></div>
+        <div class="field"><label for="sLev">Levier <output id="oLev"></output></label><input type="range" id="sLev" min="1" max="50" step="1" value="10"></div>
+        <div class="field" style="margin-bottom:0"><label for="sDrop">Le marché baisse de <output id="oDrop"></output></label><input type="range" id="sDrop" min="0" max="60" step="1" value="4"></div>
+      </div>
+      <div class="out">
+        <span class="state ok" id="sState">Position ouverte</span>
+        <div class="gauge" aria-hidden="true"><div class="fill" id="gFill"></div><div class="mark" id="gMark"></div></div>
+        <div class="big">
+          <div><small>Taille de la position</small><b id="bPos"></b></div>
+          <div><small>Liquidation dès</small><b id="bSeuil"></b></div>
+          <div><small>Perte sur ta mise</small><b id="bLoss"></b></div>
+          <div><small>Il te reste</small><b id="bLeft"></b></div>
+        </div>
+        <p class="fine" id="sMsg"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="lexique" style="background:linear-gradient(180deg,transparent,rgba(198,255,61,.05),transparent)">
+  <div class="wrap">
+    <div class="head"><div class="eyebrow">Lexique gratuit</div><h2>Six mots pour ne plus être perdu.</h2><p class="lead">Touche une carte pour la retourner.</p></div>
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+</div>
+
+<!-- ============ ACTUS ============ -->
+<div class="page" data-page="actus" hidden>
+  <section class="ptop"><div class="wrap">
+    <a class="back" href="#">← Accueil</a>
+    <div class="head"><div class="eyebrow" id="acDate"></div><h2 id="acTitle"></h2><p class="lead" id="acIntro"></p></div>
+    <div class="nums" id="acNums"></div>
+    <div id="acArts"></div>
+    <div class="glass art"><div class="eyebrow">Le point formation</div><h3 id="acFoT"></h3><p id="acFoX" style="color:var(--mist)"></p></div>
+    <p class="fine" id="acWarn"></p>
+    <div id="acCta" style="margin-top:28px"></div>
+  </div></section>
+</div>
+
+<!-- ============ PREMIUM ============ -->
+<div class="page" data-page="premium" hidden>
+  <section class="ptop"><div class="wrap">
+    <a class="back" href="#">← Accueil</a>
+    <div class="head"><div class="eyebrow">Cryptotidien+ · Espace abonné</div><h2 id="prTitle">L'édition complète</h2><p class="lead" id="prSub"></p></div>
+    <div id="prBody"></div>
+  </div></section>
+</div>
+
+<!-- ============ OUTILS ============ -->
+<div class="page" data-page="outils" hidden>
+  <section class="ptop"><div class="wrap">
+    <a class="back" href="#">← Accueil</a>
+    <div class="head"><div class="eyebrow">Cryptotidien+ · Outils exclusifs</div><h2>Tes outils</h2><p class="lead" id="otSub"></p></div>
+    <div id="otBody"></div>
+  </div></section>
+</div>
+
+<!-- ============ COMPTE ============ -->
+<div class="page" data-page="compte" hidden>
+  <section class="ptop"><div class="wrap">
+    <a class="back" href="#">← Accueil</a>
+    <div id="acct"></div>
+  </div></section>
+</div>
+
+<footer><div class="wrap"><span>© 2026 Cryptotidien · Contenu informatif. Ceci n'est pas un conseil en investissement.</span><nav aria-label="Pied de page"><a href="https://www.instagram.com/cryptotidien/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/channel/UCyDFnvDQAQfgzouyCWHRHxQ" target="_blank" rel="noopener">YouTube</a><a href="mentions-legales.html">Mentions légales et confidentialité</a></nav></div></footer>
+<div class="modal" id="modal" hidden><div class="glass" role="dialog" aria-modal="true" aria-labelledby="mTitle" id="mBox"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="edition.js"></script>
+<script>
+const CT=window.CT_EDITION;if(!CT)document.body.insertAdjacentHTML('afterbegin','<p style="padding:90px 20px 0;text-align:center">L\'édition du jour n\'a pas pu être chargée. Recharge la page.</p>');
+const {ED,IND,BRIEF,PREMIUM}=CT||{};
+const LEX=[
+ ["Blockchain","Un registre public partagé. Les transactions sont regroupées en blocs, chacun lié au précédent : modifier un ancien bloc casserait toute la chaîne."],
+ ["Wallet","Un portefeuille qui garde tes clés privées. Celui qui détient les clés contrôle les cryptos : perds-les, et personne ne peut te les rendre."],
+ ["Stablecoin","Une crypto dont la valeur suit une monnaie classique, le plus souvent le dollar. Elle sert à échanger sans subir les variations du marché."],
+ ["Halving","Tous les quatre ans environ, la récompense versée aux mineurs de bitcoin est divisée par deux. Il se crée donc de moins en moins de bitcoins."],
+ ["ETF Bitcoin","Un fonds coté en bourse qui suit le prix du bitcoin. On l'achète comme une action, sans détenir soi-même de crypto."],
+ ["MiCA","Le règlement européen qui encadre les émetteurs et les plateformes crypto. Sans agrément MiCA, une plateforme ne peut plus servir de clients dans l'Union."]];
+
+const MONTHS=["Les bases : blockchain et bitcoin","Wallets et sécurité","Acheter et stocker sans se faire avoir","Ethereum et smart contracts","Les stablecoins","La DeFi","NFT et tokenisation","Lire le marché : cycles, halving, ETF","Les risques : levier, liquidations, arnaques","Régulation : MiCA et AMF","Confidentialité et traçabilité","Fiscalité crypto en France"];
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur=n=>Math.round(n).toLocaleString('fr-FR')+' €';
+const dateLong=new Date(ED.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2400);}
+
+// ---------- Demo account, kept on this device only ----------
+let mem=null;
+const PUBLIC=true;
+const getU=()=>{if(PUBLIC)return null;try{const v=localStorage.getItem('ct-user');if(v)return JSON.parse(v);}catch(e){}return mem;};
+const setU=(v,silent)=>{mem=v;try{v?localStorage.setItem('ct-user',JSON.stringify(v)):localStorage.removeItem('ct-user');}catch(e){}silent?renderMenu(page):refresh();};
+
+function signupForm(prefix){return `<form class="form" id="${prefix}Form" novalidate>
+  <label for="${prefix}Prenom">Prénom<input type="text" id="${prefix}Prenom" autocomplete="given-name" required></label>
+  <label for="${prefix}Email">Email<input type="email" id="${prefix}Email" autocomplete="email" required></label>
+  <p class="err" id="${prefix}Err" hidden></p>
+  <button class="btn lime" type="submit">Créer mon compte gratuit</button>
+  <p class="demo">Version de démonstration : ton compte est enregistré sur cet appareil uniquement.</p></form>`;}
+function bindSignup(prefix,then){const f=$(prefix+'Form');if(!f)return;f.onsubmit=e=>{e.preventDefault();
+  const p=$(prefix+'Prenom').value.trim(),m=$(prefix+'Email').value.trim(),er=$(prefix+'Err');
+  if(!p){er.hidden=false;er.textContent='Indique ton prénom.';$(prefix+'Prenom').focus();return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)){er.hidden=false;er.textContent='Cette adresse email ne semble pas valide. Vérifie-la.';$(prefix+'Email').focus();return;}
+  setU({prenom:p,email:m,premium:false,since:new Date().toISOString(),done:[]});toast(`Bienvenue, ${p} !`);then&&then();};}
+
+// ---------- Subscription (demo: no real payment) ----------
+function openModal(html){$('mBox').innerHTML=`<button class="x" id="mx" aria-label="Fermer">×</button>`+html;$('modal').hidden=false;$('mx').onclick=closeModal;setTimeout(()=>($('mBox').querySelector('input,button.btn')||$('mx')).focus(),30);}
+function closeModal(){$('modal').hidden=true;}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeMenu();}});
+function subscribe(){if(PUBLIC)return;const u=getU();
+  if(!u){openModal(`<span class="tag">Étape 1 sur 2</span><h3 id="mTitle">Crée ton compte</h3>${signupForm('m')}`);bindSignup('m',subscribe);return;}
+  if(u.premium){location.hash='premium';closeModal();return;}
+  openModal(`<span class="tag">Étape 2 sur 2</span><h3 id="mTitle">Cryptotidien+</h3>
+    <div><div class="line"><span>Abonnement mensuel</span><b>6,99 € / mois</b></div><div class="line"><span>Engagement</span><b>Aucun</b></div><div class="line" style="border:0"><span>Compte</span><b>${esc(u.email)}</b></div></div>
+    <p class="demo">Démo : le paiement en ligne n'est pas encore branché, aucun paiement ne t'est demandé. Le bouton active l'accès sur cet appareil pour tester l'espace abonné.</p>
+    <button class="btn lime" id="mGo">Activer l'accès (démo)</button>`);
+  $('mGo').onclick=()=>{setU({...getU(),premium:true,premiumSince:new Date().toISOString()});closeModal();toast('Accès Cryptotidien+ activé');location.hash='premium';};}
+
+// ---------- Menu ----------
+function closeMenu(){$('menu').hidden=true;$('mbtn').setAttribute('aria-expanded','false');}
+$('mbtn').onclick=()=>{const m=$('menu');m.hidden=!m.hidden;$('mbtn').setAttribute('aria-expanded',String(!m.hidden));if(!m.hidden)m.querySelector('a').focus();};
+document.addEventListener('click',e=>{if(!$('menu').hidden&&!e.target.closest('#menu,#mbtn'))closeMenu();});
+function renderMenu(page){if(PUBLIC){const link=(h,t,s,p)=>`<a href="${h}" ${p===page?'aria-current="page"':''}>${t}${s?`<small>${s}</small>`:''}</a>`;
+  $('menu').innerHTML=link('#','Accueil','','home')+link('#actus','Actus du jour','4 articles','actus')+link('#simulateur','Simulateur','gratuit')+link('#lexique','Lexique','gratuit')+'<div class="sep"></div>'+link('https://www.instagram.com/cryptotidien/','Instagram','@cryptotidien')+link('mentions-legales.html','Mentions légales','');$('mav').innerHTML='';$('mlabel').textContent='Menu';return;}
+  const u=getU();
+  const link=(h,t,s,p)=>`<a href="${h}" ${p===page?'aria-current="page"':''}>${t}${s?`<small>${s}</small>`:''}</a>`;
+  $('menu').innerHTML=(u?`<div class="who">Connecté : <b style="color:var(--paper)">${esc(u.prenom)}</b> <span class="tag ${u.premium?'':'free'}">${u.premium?'Abonné':'Gratuit'}</span></div>`:'')+
+    link('#','Accueil','', 'home')+(u&&u.premium?link('#dash','Mes indicateurs','du jour'):'')+link('#actus','Actus du jour','4 articles','actus')+link('#premium','Espace abonné',u&&u.premium?'Leçon du jour':'','premium')+link('#outils','Outils abonnés','4 outils','outils')+
+    link('#simulateur','Simulateur','gratuit')+link('#lexique','Lexique','gratuit')+'<div class="sep"></div>'+
+    (u?link('#compte','Mon compte','','compte')+'<button class="btn ghost sm logoutBtn" data-logout>Se déconnecter</button>':link('#inscription','Créer un compte','gratuit'))+(u&&u.premium?'':'<div class="sep"></div><button class=\"btn demoBtn sm\" data-demo>⚡ Accès démo abonné</button>');
+  $('mav').innerHTML=u?`<span class="av">${esc(u.prenom[0].toUpperCase())}</span>`:'';$('mlabel').textContent=u?u.prenom:'Menu';}
+
+// ---------- Renderers ----------
+const numsHTML=()=>ED.chiffres.map(c=>`<div><small>${esc(c.label)}</small><b>${esc(c.valeur)}</b><br><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.source)}</a></div>`).join('');
+const artHTML=(a,i)=>`<article class="glass art" id="art${i+1}"><div class="eyebrow">0${i+1}</div><h3>${esc(a.titre)}</h3><p>${esc(a.resume)}</p><p class="why"><b>Pourquoi c'est important</b>${esc(a.pourquoi)}</p><div class="src">${a.sources.map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.nom)} ↗</a>`).join('')}</div></article>`;
+const monthsHTML=u=>{const cur=u&&u.premium?0:-1;return MONTHS.map((m,i)=>`<div class="${i===cur?'on':''}"><b>Mois ${i+1}</b>${esc(m)}</div>`).join('');};
+
+function fgSVG(v){const a=Math.PI*(1-v/100),r=80,cx=100,cy=96,x=cx+r*Math.cos(a),y=cy-r*Math.sin(a);
+  const seg=(f,t,c)=>{const a1=Math.PI*(1-f/100),a2=Math.PI*(1-t/100);return `<path d="M${cx+r*Math.cos(a1)} ${cy-r*Math.sin(a1)} A${r} ${r} 0 0 1 ${cx+r*Math.cos(a2)} ${cy-r*Math.sin(a2)}" stroke="${c}" stroke-width="14" fill="none" stroke-linecap="butt"/>`;};
+  return `<svg viewBox="0 0 200 112" role="img" aria-label="Jauge peur et cupidité : ${v} sur 100">${seg(0,24.5,'#FF6B6B')}${seg(25.5,44.5,'#FF9F5A')}${seg(45.5,54.5,'#A0A0B8')}${seg(55.5,74.5,'#9BE15D')}${seg(75.5,100,'#C6FF3D')}
+  <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#F5F5F7" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="6" fill="#F5F5F7"/>
+  <text x="18" y="110" fill="#A0A0B8" font-size="10">Peur extrême</text><text x="182" y="110" fill="#A0A0B8" font-size="10" text-anchor="end">Cupidité</text></svg>`;}
+function renderDash(u){const I=IND,L=PREMIUM.lecon,n=(u.done||[]).length,done=(u.done||[]).includes(ED.date);
+  $('dDate').textContent='Cryptotidien+ · '+dateLong;
+  const src=(t,url)=>`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`;
+  const card=c=>`<div class="glass ind"><small>${esc(c.l)}</small><b>${esc(c.v)}</b><span class="d ${c.t==='up'?'up':c.t==='dn'?'dn':'nt'}">${esc(c.d)}</span><p>${esc(c.x)}</p>${src(c.src,c.url)}</div>`;
+  const alt=(100-I.dom.btc-I.dom.eth).toFixed(1).replace('.',',');
+  $('dGrid').innerHTML=`<div class="glass ind big"><small>Indice peur &amp; cupidité</small><div class="fg">${fgSVG(I.fg.v)}<div class="lvl"><b>${I.fg.v}</b><span class="d up">${esc(I.fg.d)}</span><span style="color:var(--paper);font-weight:700">Peur</span></div></div>
+     <p style="margin-top:14px"><strong style="color:var(--paper)">Lecture du jour.</strong> ${esc(I.lecture)} Cet indice mesure l'humeur des investisseurs de 0 (panique) à 100 (euphorie). Il ne prédit rien, il décrit l'ambiance.</p>${src(I.fg.src,I.fg.url)}</div>`
+    +I.cards.slice(0,2).map(card).join('')
+    +`<div class="glass ind wide"><small>Dominance du bitcoin</small><b>${String(I.dom.btc).replace('.',',')} %</b><span class="d nt">${esc(I.dom.d)}</span>
+     <div class="dom" aria-hidden="true"><i style="width:${I.dom.btc}%;background:var(--gold)"></i><i style="width:${I.dom.eth}%;background:#8B5CFF"></i></div>
+     <div class="domk"><span style="--c:var(--gold)">Bitcoin ${String(I.dom.btc).replace('.',',')} %</span><span style="--c:#8B5CFF">Ether ≈ ${String(I.dom.eth).replace('.',',')} % (estimé)</span><span style="--c:var(--line)">Le reste ≈ ${alt} %</span></div>
+     <p>La part du bitcoin dans tout le marché. Quand elle monte, les investisseurs se replient sur la crypto jugée la plus solide.</p>${src(I.dom.src,I.dom.url)}</div>`
+    +I.cards.slice(2).map(card).join('')
+    +`<div class="glass ind full"><small>${esc(I.yrLabel)}</small><div class="yr">${I.yr.map(([k,v])=>`<div><span>${esc(k)}</span><em><i style="width:${Math.abs(v)*2}%;background:var(--down)"></i></em><span style="color:var(--down)">${String(v).replace('.',',')} %</span></div>`).join('')}</div>
+     <p>Le recul de long terme. Utile pour garder la perspective quand une journée fait parler.</p>${src(I.yrSrc.src,I.yrSrc.url)}</div>`;
+  $('dNote').textContent=I.maj;
+  const wk=Array.from({length:7},(_,i)=>`<i class="${i<Math.min(7,n)?'on':''}"></i>`).join('');
+  $('dDay').innerHTML=`<div class="glass"><div class="eyebrow">Leçon du jour</div><h3>${esc(L.titre)}</h3><p class="fine" style="margin:0">${L.points.length} points clés et ${L.quiz.length} questions · environ 1 minute.</p>
+     <div class="streak" aria-label="${Math.min(7,n)} leçons validées sur 7">${wk}</div><p class="fine" style="margin:0">${n} leçon${n>1?'s':''} validée${n>1?'s':''} · mois 1 : ${esc(MONTHS[0])}</p>
+     <div><a class="btn lime sm" href="#premium">${done?'Revoir la leçon':'Faire la leçon et le quiz'}</a></div></div>
+   <div class="glass"><div class="eyebrow">À surveiller</div><div class="next">${esc(I.prochain.quand)}</div><p style="margin:0">${esc(I.prochain.quoi)}</p><p class="fine" style="margin:0">Ensuite : ${esc(PREMIUM.agenda[1][0])}, ${esc(PREMIUM.agenda[1][1].charAt(0).toLowerCase()+PREMIUM.agenda[1][1].slice(1))}</p><div style="margin-top:auto"><a class="btn ghost sm" href="#premium">Tout l'agenda →</a></div></div>
+   <div class="glass"><div class="eyebrow">L'analyse</div><h3>${esc(PREMIUM.analyse.titre)}</h3><p class="fine" style="margin:0">${esc(PREMIUM.analyse.ps[1])}</p><div style="margin-top:auto;display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost sm" href="#premium">Lire l'analyse</a><a class="btn ghost sm" href="#actus">Les 4 actus</a></div></div>`;}
+function renderHome(){const u=getU();const prem=!!(u&&u.premium);document.body.classList.toggle('isPrem',prem);
+  if(prem){$('hEye').textContent='Cryptotidien+ · Ton tableau de bord';$('hTitle').innerHTML=`Bonjour ${esc(u.prenom)},<br>marché <em>${esc(IND.humeur)}</em> ce matin.`;
+    $('hLead').textContent=IND.accroche;renderDash(u);}
+  else{$('hEye').textContent='Crypto · Blockchain · Chaque matin';$('hTitle').innerHTML="L'essentiel de la crypto, <em>vérifié</em>.";
+    $('hLead').textContent="L'actu du jour recoupée dans plusieurs sources, et un point formation pour vraiment comprendre l'écosystème. Zéro hype, zéro promesse de gains.";}
+  $('heroCta').innerHTML=u&&u.premium?`<a class="btn lime" href="#dash">Mes indicateurs</a><a class="btn ghost" href="#premium">Ma leçon du jour</a><button class="btn ghost" data-logout>Se déconnecter</button>`
+    :`<a class="btn lime" href="#resume">Le résumé du jour</a><a class="btn ghost" href="https://www.instagram.com/cryptotidien/" target="_blank" rel="noopener">Suivre sur Instagram</a>`;
+  $('offerCta').innerHTML=u&&u.premium?`<a class="btn lime" href="#premium">Accéder à mon espace abonné</a>`:`<button class="btn lime" data-sub>Je m'abonne · 6,99 € / mois</button>`;
+  $('monthsHome').innerHTML=monthsHTML(u);
+  const s=$('signupHome');
+  if(u){s.innerHTML=`<div class="side"><span class="tag ${u.premium?'':'free'}" style="align-self:flex-start">${u.premium?'Abonné Cryptotidien+':'Compte gratuit'}</span><h2>Content de te revoir, ${esc(u.prenom)}.</h2><p class="lead">${u.premium?'Ta leçon du jour et son quiz t\'attendent dans ton espace abonné.':'Passe à Cryptotidien+ pour ton tableau de bord du matin, une leçon par jour, les outils exclusifs et ton parcours sur 12 mois.'}</p></div>
+    <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">${u.premium?`<a class="btn lime" href="#premium">Ouvrir mon espace abonné</a>`:`<button class="btn lime" data-sub>Je m'abonne · 6,99 € / mois</button>`}<a class="btn ghost" href="#compte">Mon compte</a>${u.premium?'':'<button class="btn demoBtn sm" data-demo>⚡ Accès démo abonné</button>'}</div>`;}
+  else{s.innerHTML=`<div class="side"><span class="eyebrow">Gratuit</span><h2>Crée ton compte.</h2><p class="lead">Le résumé chaque matin, le simulateur et le lexique. Tu pourras passer à Cryptotidien+ quand tu veux.</p></div><div>${signupForm('h')}<div class="demoWrap"><button class="btn demoBtn sm" data-demo>⚡ Accès démo abonné</button></div></div>`;bindSignup('h');}
+}
+function renderActus(){$('acDate').textContent='Édition du '+dateLong;$('acTitle').textContent=ED.titre;$('acIntro').textContent=ED.intro;$('acNums').innerHTML=numsHTML();
+  $('acArts').innerHTML=ED.articles.map(artHTML).join('');$('acFoT').textContent=ED.formation.titre;$('acFoX').textContent=ED.formation.texte;$('acWarn').textContent=ED.avertissement;
+  const u=getU();$('acCta').innerHTML=PUBLIC?`<div class="glass" style="padding:26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap"><div><h3>L'actu crypto chaque matin</h3><p class="fine" style="margin-top:6px">Le résumé du jour aussi en carrousel sur Instagram et en vidéo courte sur YouTube.</p></div><a class="btn lime" href="https://www.instagram.com/cryptotidien/" target="_blank" rel="noopener">Suivre @cryptotidien</a></div>`:u&&u.premium?`<a class="btn lime" href="#premium">L'analyse et la leçon du jour →</a>`:`<div class="glass" style="padding:26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap"><div><h3>Va plus loin avec Cryptotidien+</h3><p class="fine" style="margin-top:6px">Indicateurs, analyse, leçon du jour et outils exclusifs. 6,99 € / mois.</p></div><button class="btn lime" data-sub>Je m'abonne</button></div>`;}
+
+let qi=0,score=0;
+function renderPremium(){const u=getU(),on=u&&u.premium,L=PREMIUM.lecon,done=on&&(u.done||[]).includes(ED.date);
+  $('prSub').textContent=`Édition du ${dateLong}. ${ED.titre}.`;
+  const body=`<div class="pgrid">
+    <div class="glass"><div class="eyebrow">L'analyse du jour</div><h3 style="margin:10px 0 12px">${esc(PREMIUM.analyse.titre)}</h3>${PREMIUM.analyse.ps.map(p=>`<p style="margin:0 0 12px;max-width:66ch">${esc(p)}</p>`).join('')}<a class="btn ghost sm" href="#actus">Les 4 actus en détail →</a></div>
+    <div class="glass"><div class="eyebrow">À surveiller</div><ul class="agenda">${PREMIUM.agenda.map(([d,t])=>`<li><b>${esc(d)}</b><span>${esc(t)}</span></li>`).join('')}</ul></div>
+  </div>
+  <div class="glass" style="padding:30px;margin-top:14px" id="lesson">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div class="eyebrow">Leçon du jour · lien avec l'actu</div><span class="tag ${done?'':'free'}">${done?'Leçon validée':'1 minute'}</span></div>
+    <h3 style="margin-top:10px">${esc(L.titre)}</h3>
+    <ol class="points">${L.points.map(([t,x])=>`<li><b>${esc(t)}</b><span>${esc(x)}</span></li>`).join('')}</ol>
+    <div class="quiz" id="quizBox"></div>
+  </div>
+  <div class="glass" style="padding:30px;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div class="eyebrow">Ton parcours sur 12 mois</div><span class="fine" id="progTxt"></span></div>
+    <div class="prog" style="margin:14px 0 16px"><i id="progBar" style="width:0"></i></div>
+    <div class="months">${monthsHTML(u)}</div>
+  </div>`;
+  if(on){$('prTitle').textContent=`Bonjour ${u.prenom}, voici ton édition complète`;$('prBody').innerHTML=body;qi=0;score=0;quiz();progress();}
+  else{$('prTitle').textContent="L'édition complète";
+    $('prBody').innerHTML=`<div class="locked"><div class="blur" aria-hidden="true">${body}</div><div class="gate"><div class="glass"><span class="tag" style="align-self:flex-start">Cryptotidien+</span><h3>Réservé aux abonnés</h3><p class="lead">Les indicateurs du matin, l'analyse, la leçon et son quiz, les outils exclusifs et ton parcours de 12 mois.</p><div class="price" style="margin:0"><b style="font-size:40px">6,99 €</b><span>/ mois, sans engagement</span></div><button class="btn lime" data-sub>Je m'abonne</button>${u?'':'<a class="btn ghost" href="#inscription">Créer d\'abord un compte gratuit</a>'}</div></div></div>`;}
+}
+function progress(){const u=getU();const n=(u.done||[]).length;$('progBar').style.width=Math.min(100,n/365*100)+'%';$('progTxt').textContent=`${n} leçon${n>1?'s':''} validée${n>1?'s':''} sur 365 · mois 1 : ${MONTHS[0]}`;}
+function quiz(){const Q=PREMIUM.lecon.quiz,b=$('quizBox');if(!b)return;
+  if(qi>=Q.length){const u=getU();if(!(u.done||[]).includes(ED.date)){setU({...u,done:[...(u.done||[]),ED.date]},true);const tg=document.querySelector('#lesson .tag');if(tg){tg.textContent='Leçon validée';tg.classList.remove('free');}}
+    b.innerHTML=`<div class="dots">${Q.map(()=>'<i class="on"></i>').join('')}</div><h4>${score} sur ${Q.length}. ${score===Q.length?'Leçon validée sans faute !':'Leçon validée. Relis les points ci-dessus pour bien retenir.'}</h4><div><button class="btn ghost sm" id="again">Refaire le quiz</button></div>`;
+    $('again').onclick=()=>{qi=0;score=0;quiz();};progress();return;}
+  const q=Q[qi];
+  b.innerHTML=`<div class="dots">${Q.map((_,i)=>`<i class="${i<=qi?'on':''}"></i>`).join('')}</div><h4>Quiz · ${esc(q.q)}</h4><div class="opts">${q.o.map((o,i)=>`<button data-i="${i}">${esc(o)}</button>`).join('')}</div><p class="fine" id="expl" hidden></p><div><button class="btn lime sm" id="next" hidden>${qi===Q.length-1?'Valider la leçon':'Question suivante'}</button></div>`;
+  b.querySelector('.opts').onclick=e=>{const t=e.target.closest('button');if(!t||t.disabled)return;const i=+t.dataset.i;
+    b.querySelectorAll('.opts button').forEach((x,k)=>{x.disabled=true;if(k===q.a)x.classList.add('good');});
+    if(i===q.a)score++;else t.classList.add('bad');const ex=$('expl');ex.hidden=false;ex.textContent=(i===q.a?'Exact. ':'Pas tout à fait. ')+q.e;$('next').hidden=false;$('next').focus();};
+  $('next').onclick=()=>{qi++;quiz();};}
+function renderCompte(){const u=getU(),el=$('acct');
+  if(!u){el.innerHTML=`<div class="glass signup"><div class="side"><span class="eyebrow">Mon compte</span><h2>Tu n'as pas encore de compte.</h2><p class="lead">Crée-le en 10 secondes.</p></div><div>${signupForm('c')}</div></div>`;bindSignup('c');return;}
+  const since=d=>new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});const n=(u.done||[]).length;
+  el.innerHTML=`<div class="head"><div class="eyebrow">Mon compte</div><h2>${esc(u.prenom)}</h2><p class="lead">${esc(u.email)}</p></div>
+  <div class="pgrid"><div class="glass">
+    <div class="line"><span>Formule</span><b>${u.premium?'Cryptotidien+ · 6,99 € / mois':'Gratuit'}</b></div>
+    <div class="line"><span>Membre depuis</span><b>${since(u.since)}</b></div>
+    <div class="line" style="border:0"><span>Leçons validées</span><b>${n}</b></div>
+    <div class="cta" style="margin-top:18px">${u.premium?`<a class="btn lime" href="#premium">Mon espace abonné</a><button class="btn ghost" id="unsub">Résilier (démo)</button>`:`<button class="btn lime" data-sub>Passer à Cryptotidien+</button>`}<button class="btn ghost" id="logout">Se déconnecter</button></div>
+  </div><div class="glass"><p class="demo" style="margin:0">Version de démonstration : le compte et l'abonnement sont enregistrés sur cet appareil uniquement. Aucun paiement réel n'est effectué.</p></div></div>`;
+  const un=$('unsub');if(un)un.onclick=()=>{setU({...getU(),premium:false});toast('Abonnement résilié');};
+  $('logout').onclick=()=>{setU(null);toast('Tu es déconnecté');location.hash='';};}
+
+
+// ---------- Outils abonnés ----------
+const nf=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('fr-FR',{maximumFractionDigits:d}):'—';
+const num=v=>{const x=parseFloat(String(v).replace(/\s/g,'').replace(',','.'));return Number.isFinite(x)?x:0;};
+const FLAGS=["On te promet un rendement garanti ou « sans risque ».","On te presse : offre limitée, bonus qui expire dans quelques heures.","On te demande ta phrase de récupération ou tes clés privées.","Le contact est venu de toi par un inconnu (DM, groupe Telegram, appli de rencontre).","Les gains passent surtout par le parrainage de nouveaux membres.","La plateforme n'apparaît pas dans les registres de l'AMF (agrément MiCA).","Impossible de retirer sans payer d'abord des « frais » ou une « taxe ».","L'équipe est anonyme et le site existe depuis quelques semaines."];
+function renderOutils(){const u=getU(),on=u&&u.premium,P=IND.prix,eu=P.BTC/P.EURUSD;
+  $('otSub').textContent=`Cours utilisés : relevés du ${dateLong} au matin (${P.src}). Résultats indicatifs, pas un conseil en investissement ni un conseil fiscal.`;
+  const body=`<div class="tools">
+  <div class="glass tool" id="t-conv"><div class="hd"><span class="tico">⇄</span><div><h3>Convertisseur</h3><p class="fine">Au cours du matin.</p></div></div>
+    <div class="tin"><label>Montant<input id="cvA" inputmode="decimal" value="0,05"></label><label>Devise<select id="cvF"><option>BTC</option><option>ETH</option><option>EUR</option><option>USD</option></select></label></div>
+    <div class="tres" id="cvR"></div></div>
+  <div class="glass tool" id="t-pru"><div class="hd"><span class="tico">Ø</span><div><h3>Prix de revient</h3><p class="fine">Ajoute chacun de tes achats.</p></div></div>
+    <div class="tin"><label>Crypto<select id="prA"><option>BTC</option><option>ETH</option></select></label><label>Cours du matin<input id="prC" disabled></label></div>
+    <div class="buys" id="prL"></div><div><button class="btn ghost sm" id="prAdd">+ Ajouter un achat</button></div>
+    <div class="tres" id="prR"></div></div>
+  <div class="glass tool" id="t-impot"><div class="hd"><span class="tico">%</span><div><h3>Estimation d'impôt</h3><p class="fine">Flat tax 2026 : 31,4 % (12,8 % d'impôt + 18,6 % de prélèvements sociaux).</p></div></div>
+    <div class="tin"><label>Montant de la vente (€)<input id="txC" inputmode="decimal" value="2000"></label><label>Valeur totale de tes cryptos juste avant la vente (€)<input id="txV" inputmode="decimal" value="10000"></label>
+    <label style="grid-column:1/-1">Total investi en euros dans tes cryptos (€)<input id="txI" inputmode="decimal" value="6000"></label></div>
+    <div class="tres" id="txR"></div>
+    <p class="fine">Formule officielle pour une vente : gain = prix de vente − (total investi × prix de vente ÷ valeur totale). Ventes de l'année ≤ 305 € : exonérées. Les échanges crypto contre crypto ne sont pas imposés. Estimation simplifiée pour une seule vente ; pour ta déclaration (formulaire 2086), vérifie avec impots.gouv.fr ou un professionnel.</p></div>
+  <div class="glass tool" id="t-arnaque"><div class="hd"><span class="tico">!</span><div><h3>Détecteur d'arnaque</h3><p class="fine">Coche ce qui correspond au projet ou à la personne.</p></div></div>
+    <div class="flags">${FLAGS.map((f,i)=>`<label><input type="checkbox" data-f="${i}">${esc(f)}</label>`).join('')}</div>
+    <div class="verdict ok" id="scV"></div>
+    <p class="fine">Vérifie toujours une plateforme sur la liste blanche et la liste noire de l'AMF (amf-france.org) avant d'envoyer de l'argent.</p></div>
+  </div>`;
+  if(!on){$('otBody').innerHTML=`<div class="locked"><div class="blur" aria-hidden="true">${body}</div><div class="gate"><div class="glass"><span class="tag" style="align-self:flex-start">Cryptotidien+</span><h3>Réservé aux abonnés</h3><p class="lead">Convertisseur, prix de revient, estimation d'impôt et détecteur d'arnaque, mis à jour avec les cours de chaque matin.</p><div class="price" style="margin:0"><b style="font-size:40px">6,99 €</b><span>/ mois, sans engagement</span></div><button class="btn lime" data-sub>Je m'abonne</button>${u?'':'<a class="btn ghost" href="#inscription">Créer d\'abord un compte gratuit</a>'}</div></div></div>`;return;}
+  $('otBody').innerHTML=body;
+  // converter
+  const rate={BTC:eu,ETH:P.ETH/P.EURUSD,EUR:1,USD:1/P.EURUSD};
+  const conv=()=>{const a=num($('cvA').value),f=$('cvF').value,e=a*rate[f];
+    $('cvR').innerHTML=['EUR','USD','BTC','ETH'].filter(k=>k!==f).map(k=>`<div><small>${k}</small><b>${nf(e/rate[k],k==='BTC'?6:k==='ETH'?4:2)}</b></div>`).join('');};
+  $('cvA').oninput=conv;$('cvF').onchange=conv;conv();
+  // PRU
+  let buys=[["200","62000"],["150","68000"]];
+  const pru=()=>{const A=$('prA').value,c=rate[A];$('prC').value=nf(c,0)+' €';
+    let inv=0,q=0;buys.forEach(([m,pr])=>{const M=num(m),Pp=num(pr);if(M>0&&Pp>0){inv+=M;q+=M/Pp;}});
+    const val=q*c,pv=val-inv,pc=inv?pv/inv*100:0;
+    $('prR').innerHTML=`<div><small>Investi</small><b>${nf(inv,0)} €</b></div><div><small>Quantité</small><b>${nf(q,6)}</b></div><div><small>Prix moyen</small><b>${q?nf(inv/q,0)+' €':'—'}</b></div><div><small>Valeur ce matin</small><b>${nf(val,0)} €</b></div><div><small>Plus-value latente</small><b style="color:${pv>=0?'var(--up)':'var(--down)'}">${pv>=0?'+':''}${nf(pv,0)} €</b></div><div><small>En pourcentage</small><b style="color:${pv>=0?'var(--up)':'var(--down)'}">${pv>=0?'+':''}${nf(pc,1)} %</b></div>`;};
+  const drawBuys=()=>{$('prL').innerHTML=buys.map(([m,pr],i)=>`<div class="buy tin"><label>Montant investi (€)<input data-b="${i}" data-k="0" inputmode="decimal" value="${esc(m)}"></label><label>Prix d'achat (€ / unité)<input data-b="${i}" data-k="1" inputmode="decimal" value="${esc(pr)}"></label><button data-rm="${i}" aria-label="Supprimer cet achat">×</button></div>`).join('');pru();};
+  $('prL').oninput=e=>{const t=e.target;if(t.dataset.b!=null){buys[+t.dataset.b][+t.dataset.k]=t.value;pru();}};
+  $('prL').onclick=e=>{const b=e.target.closest('[data-rm]');if(b&&buys.length>1){buys.splice(+b.dataset.rm,1);drawBuys();}};
+  $('prAdd').onclick=()=>{buys.push(["",""]);drawBuys();};$('prA').onchange=pru;drawBuys();
+  // tax
+  const tax=()=>{const C=num($('txC').value),V=num($('txV').value),I=num($('txI').value);
+    const pv=V>0?C-I*Math.min(1,C/V):0,ex=C<=305,base=Math.max(0,pv),t=ex?0:base*.314;
+    $('txR').innerHTML=`<div><small>${pv>=0?'Plus-value':'Moins-value'}</small><b style="color:${pv>=0?'var(--up)':'var(--down)'}">${nf(pv,0)} €</b></div><div><small>Impôt estimé</small><b>${ex?'0 € (exonéré)':nf(t,0)+' €'}</b></div><div><small>Dont impôt sur le revenu</small><b>${nf(ex?0:base*.128,0)} €</b></div><div><small>Dont prélèv. sociaux</small><b>${nf(ex?0:base*.186,0)} €</b></div><div><small>Il te reste</small><b>${nf(C-t,0)} €</b></div>`;};
+  ['txC','txV','txI'].forEach(id=>$(id).oninput=tax);tax();
+  // scam
+  const sc=()=>{const n=document.querySelectorAll('[data-f]:checked').length,v=$('scV'),key=document.querySelector('[data-f="2"]:checked,[data-f="6"]:checked');
+    if(key||n>=3){v.className='verdict ko';v.textContent=`${n} ${n>1?'signaux':'signal'} sur 8 : très probablement une arnaque. N'envoie rien${key?', et ne donne jamais ta phrase de récupération':''}.`;}
+    else if(n>0){v.className='verdict mid';v.textContent=`${n} ${n>1?'signaux':'signal'} sur 8 : prudence. Vérifie la plateforme sur les listes de l'AMF avant d'aller plus loin.`;}
+    else{v.className='verdict ok';v.textContent="Aucun signal coché. Reste vigilant : l'absence de signaux ne garantit pas qu'un projet est sûr.";}};
+  document.querySelectorAll('[data-f]').forEach(c=>c.onchange=sc);sc();}
+
+// ---------- Router (plain #name hashes) ----------
+let page='home';
+function route(){const h=decodeURIComponent(location.hash.slice(1));let p='home',art=null;
+  if(h==='actus'||/^actus-\d$/.test(h)){p='actus';art=h.split('-')[1];}else if(!PUBLIC&&(h==='premium'||h==='compte'))p=h;else if(!PUBLIC&&(h==='outils'||/^outils-[a-z]+$/.test(h))){p='outils';art=h.split('-')[1]||null;}
+  const changed=p!==page;page=p;
+  document.querySelectorAll('[data-page]').forEach(m=>m.hidden=m.dataset.page!==p);
+  closeMenu();refresh();
+  const target=art?(p==='outils'?$('t-'+art):$('art'+art)):(p==='home'&&h?$(h):null);
+  if(target)setTimeout(()=>target.scrollIntoView({behavior:changed?'auto':'smooth'}),changed?60:0);else if(changed)scrollTo(0,0);
+  if(changed){const pg=document.querySelector(`[data-page="${p}"]`);pg.classList.remove('page');void pg.offsetWidth;pg.classList.add('page');}}
+function refresh(){renderMenu(page);if(page==='home')renderHome();if(page==='actus')renderActus();if(page==='premium')renderPremium();if(page==='compte')renderCompte();if(page==='outils')renderOutils();}
+addEventListener('hashchange',route);
+document.addEventListener('click',e=>{if(e.target.closest('[data-sub]')){e.preventDefault();subscribe();}});
+document.addEventListener('click',e=>{if(!e.target.closest('[data-logout]'))return;e.preventDefault();closeMenu();setU(null);toast('Tu es déconnecté');if(location.hash)location.hash='';else route();scrollTo(0,0);});
+// DEMO ONLY: à supprimer à la finalisation (bouton .demoBtn + ce bloc)
+document.addEventListener('click',e=>{if(!e.target.closest('[data-demo]'))return;e.preventDefault();const u=getU();
+  setU({prenom:u?.prenom||'Benjamin',email:u?.email||'demo@cryptotidien.fr',since:u?.since||new Date().toISOString().slice(0,10),done:u?.done||[],...(u||{}),premium:true});
+  closeModal();closeMenu();toast('Accès abonné activé (démo)');if(location.hash){location.hash='';}else{route();}scrollTo(0,0);});
+
+// ---------- Static home blocks ----------
+$('edDate').textContent='Édition du '+dateLong;$('nums').innerHTML=numsHTML();
+$('brief').innerHTML=ED.articles.map((a,i)=>`<a class="glass" href="#actus-${i+1}"><i>0${i+1}</i><b>${esc(a.titre)}</b><span>${esc(BRIEF[i])}</span><em>Lire l'article →</em></a>`).join('');
+const tk=ED.chiffres.map(c=>`<span>${esc(c.label)}<b>${esc(c.valeur)}</b></span>`).join('')+ED.articles.map(a=>`<span>${esc(a.titre)}</span>`).join('');$('tick').innerHTML=tk+tk;
+$('cards').innerHTML=LEX.map(([t,x],i)=>`<button class="flip" aria-pressed="false" id="lex${i}"><span class="in"><span class="f"><span class="n">0${i+1}</span><h3>${esc(t)}</h3><span class="t">Retourner ↻</span></span><span class="f back">${esc(x)}</span></span></button>`).join('');
+$('cards').addEventListener('click',e=>{const b=e.target.closest('.flip');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');});
+function sim(){const mise=+$('sMise').value,lev=+$('sLev').value,drop=+$('sDrop').value;
+  const pos=mise*lev,seuil=100/lev,liq=lev>1&&drop>=seuil,loss=Math.min(mise,pos*drop/100),f=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:1});
+  $('oMise').textContent=eur(mise);$('oLev').textContent='×'+lev;$('oDrop').textContent=drop+' %';
+  $('bPos').textContent=eur(pos);$('bSeuil').textContent=lev===1?'jamais':'−'+f(seuil)+' %';$('bLoss').textContent='−'+eur(loss);$('bLeft').textContent=eur(mise-loss);
+  $('bLoss').style.color=loss>0?'var(--down)':'';$('bLeft').style.color=liq?'var(--down)':'';
+  const st=$('sState');st.textContent=liq?'Liquidé':'Position ouverte';st.className='state '+(liq?'ko':'ok');
+  $('gFill').style.width=Math.min(100,drop/60*100)+'%';const m=$('gMark'),p=Math.min(100,seuil/60*100);m.style.left=`calc(${p}% - 2px)`;m.style.display=lev===1||seuil>60?'none':'';m.classList.toggle('left',p>70);
+  $('sMsg').textContent=lev===1?"Sans levier, personne ne ferme ta position à ta place : elle peut baisser, puis remonter.":liq?`À −${drop} %, la perte dépasse ta mise : la plateforme a fermé la position d'office. Même si le marché remonte ensuite, c'est trop tard.`:`Avec un levier ×${lev}, il suffit d'une baisse de ${f(seuil)} % pour tout perdre. Plus le levier est haut, plus ce seuil est proche.`;}
+['sMise','sLev','sDrop'].forEach(id=>$(id).addEventListener('input',sim));sim();
+document.addEventListener('pointermove',e=>{const s=e.target.closest&&e.target.closest('.glass');if(!s)return;const r=s.getBoundingClientRect();s.style.setProperty('--mx',(e.clientX-r.left)+'px');s.style.setProperty('--my',(e.clientY-r.top)+'px');});
+route();
+</script>
+<script type="module">
+import * as THREE from 'three';
+const hero=document.getElementById('hero'),cv=document.getElementById('scene');
+let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(e){hero.classList.add('nogl');}
+if(renderer){
+  const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,200);
+  const NX=110,NZ=56,S=.42,seg=[];
+  const P=(i,j)=>[(i-NX/2)*S,0,(j-NZ/2)*S];
+  for(let j=0;j<=NZ;j++)for(let i=0;i<NX;i++)seg.push(...P(i,j),...P(i+1,j));
+  for(let i=0;i<=NX;i+=2)for(let j=0;j<NZ;j++)seg.push(...P(i,j),...P(i,j+1));
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(seg,3));
+  const U={uTime:{value:0}};
+  const grid=new THREE.LineSegments(g,new THREE.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+    vertexShader:`uniform float uTime;varying float vH,vF,vScan;
+      void main(){vec3 p=position;float t=uTime;
+        float h=sin(p.x*.16+t*.22)*.7+sin(p.z*.24-t*.17)*.45+sin((p.x-p.z)*.09+t*.12)*.6;
+        h+=sin(length(p.xz-vec2(6.,-3.))*.5-t*.9)*.18;
+        p.y=h-1.6;vH=h;
+        float sx=mod(t*2.2,34.)-17.;vScan=exp(-pow(p.x-sx,2.)*.08);
+        vF=smoothstep(22.,8.,abs(p.x))*smoothstep(11.,2.,abs(p.z+.5));
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+    fragmentShader:`varying float vH,vF,vScan;void main(){
+        vec3 c=mix(vec3(.35,.24,.85),vec3(.78,1.,.24),smoothstep(-.4,1.4,vH)*.4+vScan*.55);
+        gl_FragColor=vec4(c,vF*(.14+smoothstep(-1.,1.4,vH)*.3+vScan*.35));}`}));
+  scene.add(grid);
+  function resize(){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();
+    if(w<820){cam.position.set(0,3.6,10.5);cam.lookAt(0,-.6,-2);}else{cam.position.set(0,3.4,11.5);cam.lookAt(0,-.2,-2);}}
+  new ResizeObserver(resize).observe(cv);resize();
+  let vis=true;new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
+  const clock=new THREE.Clock();let t=0;
+  (function frame(){requestAnimationFrame(frame);if(!vis||hero.closest('[hidden]'))return;
+    const dt=Math.min(.05,clock.getDelta());if(!still)t+=dt;
+    U.uTime.value=t;grid.rotation.y=Math.sin(t*.05)*.06;renderer.render(scene,cam);})();
+}
+</script>
+
+
+
+</body>
+</html>

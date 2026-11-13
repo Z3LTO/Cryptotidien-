@@ -307,7 +307,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (max-width:480px){.tin{grid-template-columns:1fr}.dtools{grid-template-columns:1fr}}
 .menu .logoutBtn{width:100%;justify-content:center;margin-top:6px}
 /* Version publique : l'offre abonné n'est pas encore ouverte */
-#offre,#inscription,#dash,.demoBtn,.demoWrap{display:none!important}
+body:not(.owner) #offre,body:not(.owner) #inscription,body:not(.owner) .demoBtn,body:not(.owner) .demoWrap{display:none!important}body:not(.owner) #dash{display:none!important}
 footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:flex;gap:16px;flex-wrap:wrap}
 </style>
 <script type="importmap">
@@ -506,7 +506,13 @@ function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');
 
 // ---------- Demo account, kept on this device only ----------
 let mem=null;
-const PUBLIC=true;
+// Mode propriétaire : ouvrir une fois le site avec le lien secret #proprio-49a574b77bd6 active la version complète (abonné + démo) sur CET appareil uniquement.
+const OWNER_KEY='ct-owner';
+(()=>{try{if(location.hash==='#proprio-49a574b77bd6'){localStorage.setItem(OWNER_KEY,'1');history.replaceState(null,'',location.pathname);}
+  if(location.hash==='#proprio-off'){localStorage.removeItem(OWNER_KEY);history.replaceState(null,'',location.pathname);}}catch(e){}})();
+const OWNER=(()=>{try{return localStorage.getItem(OWNER_KEY)==='1';}catch(e){return false;}})();
+const PUBLIC=!OWNER;
+document.body.classList.toggle('owner',OWNER);
 const getU=()=>{if(PUBLIC)return null;try{const v=localStorage.getItem('ct-user');if(v)return JSON.parse(v);}catch(e){}return mem;};
 const setU=(v,silent)=>{mem=v;try{v?localStorage.setItem('ct-user',JSON.stringify(v)):localStorage.removeItem('ct-user');}catch(e){}silent?renderMenu(page):refresh();};
 
@@ -547,7 +553,7 @@ function renderMenu(page){if(PUBLIC){const link=(h,t,s,p)=>`<a href="${h}" ${p==
   $('menu').innerHTML=(u?`<div class="who">Connecté : <b style="color:var(--paper)">${esc(u.prenom)}</b> <span class="tag ${u.premium?'':'free'}">${u.premium?'Abonné':'Gratuit'}</span></div>`:'')+
     link('#','Accueil','', 'home')+(u&&u.premium?link('#dash','Mes indicateurs','du jour'):'')+link('#actus','Actus du jour','4 articles','actus')+link('#premium','Espace abonné',u&&u.premium?'Leçon du jour':'','premium')+link('#outils','Outils abonnés','4 outils','outils')+
     link('#simulateur','Simulateur','gratuit')+link('#lexique','Lexique','gratuit')+'<div class="sep"></div>'+
-    (u?link('#compte','Mon compte','','compte')+'<button class="btn ghost sm logoutBtn" data-logout>Se déconnecter</button>':link('#inscription','Créer un compte','gratuit'))+(u&&u.premium?'':'<div class="sep"></div><button class=\"btn demoBtn sm\" data-demo>⚡ Accès démo abonné</button>');
+    (OWNER?'<a href="#proprio-off" onclick="setTimeout(()=>location.reload(),50)">Quitter le mode propriétaire<small>cet appareil</small></a>':'')+(u?link('#compte','Mon compte','','compte')+'<button class="btn ghost sm logoutBtn" data-logout>Se déconnecter</button>':link('#inscription','Créer un compte','gratuit'))+(u&&u.premium?'':'<div class="sep"></div><button class=\"btn demoBtn sm\" data-demo>⚡ Accès démo abonné</button>');
   $('mav').innerHTML=u?`<span class="av">${esc(u.prenom[0].toUpperCase())}</span>`:'';$('mlabel').textContent=u?u.prenom:'Menu';}
 
 // ---------- Renderers ----------

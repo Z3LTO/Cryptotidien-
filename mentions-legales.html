@@ -27,6 +27,8 @@ ul{margin:0 0 10px;padding-left:20px}
 .muted{color:var(--mist)}
 dl{display:grid;grid-template-columns:170px 1fr;gap:6px 16px;margin:0}
 dt{color:var(--mist)}dd{margin:0}
+.reveal{font:inherit;font-weight:700;color:#050507;background:var(--gold);border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+#coords{display:block;line-height:1.8}
 @media (max-width:560px){dl{grid-template-columns:1fr}dd{margin-bottom:8px}}
 </style>
 </head>
@@ -43,13 +45,12 @@ dt{color:var(--mist)}dd{margin:0}
   <section>
     <h2>Éditeur du site</h2>
     <dl>
-      <dt>Nom</dt><dd>[PRÉNOM NOM], entrepreneur individuel (micro-entrepreneur), exerçant sous le nom commercial Cryptotidien</dd>
-      <dt>Adresse</dt><dd>[ADRESSE POSTALE DE L'ENTREPRISE]</dd>
-      <dt>Téléphone</dt><dd>[NUMÉRO DE TÉLÉPHONE]</dd>
-      <dt>E-mail</dt><dd>[ADRESSE E-MAIL DE CONTACT]</dd>
+      <dt>Nom</dt><dd>Benjamin Nascivet, entrepreneur individuel (micro-entrepreneur), exerçant sous le nom commercial Cryptotidien</dd>
+      <dt>Coordonnées</dt><dd><button type="button" class="reveal" id="reveal">Afficher l'adresse, le téléphone et l'e-mail</button>
+        <span id="coords" hidden data-a="MTQgY2hlbWluIGRlcyBSw6lhdXgsIDE3NDQwIEF5dHLDqSwgRnJhbmNl" data-t="MDYgOTggMzMgNzQgMzQ=" data-m="YmVuamFtaW5qb3V5NDRAZ21haWwuY29t"></span></dd>
       <dt>SIREN / SIRET</dt><dd>[NUMÉRO SIRET]</dd>
       <dt>TVA</dt><dd>TVA non applicable, article 293 B du CGI</dd>
-      <dt>Directeur de la publication</dt><dd>[PRÉNOM NOM]</dd>
+      <dt>Directeur de la publication</dt><dd>Benjamin Nascivet</dd>
     </dl>
   </section>
 
@@ -88,5 +89,10 @@ dt{color:var(--mist)}dd{margin:0}
     <p>Les textes, le logo, les visuels et la mise en page de Cryptotidien sont protégés par le droit d'auteur. Toute reproduction sans autorisation est interdite. Tu peux citer un court extrait en indiquant la source et le lien vers le site. Les marques et contenus des sources citées appartiennent à leurs propriétaires.</p>
   </section>
 </div>
+<script>
+document.getElementById('reveal').onclick=function(){var c=document.getElementById('coords'),d=function(k){return decodeURIComponent(escape(atob(c.dataset[k])))};
+  var m=d('m'),t=d('t');c.innerHTML='';[['Adresse : ',d('a')],['Téléphone : ',t,'tel:'+t.replace(/\s/g,'')],['E-mail : ',m,'mailto:'+m]].forEach(function(r){var l=document.createElement('span');l.style.display='block';l.append(r[0]);
+  if(r[2]){var a=document.createElement('a');a.href=r[2];a.textContent=r[1];l.append(a);}else l.append(r[1]);c.append(l);});c.hidden=false;this.remove();};
+</script>
 </body>
 </html>

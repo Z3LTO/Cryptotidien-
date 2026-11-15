@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: relais-cryptotidien
@@ -85,3 +86,9 @@ jobs:
           git add edition.js
           git commit -m "Édition du ${EDITION_DATE}"
           git push
+
+      - name: Demander la mise à jour du site (GitHub Pages)
+        if: env.EDITION_DATE != '' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

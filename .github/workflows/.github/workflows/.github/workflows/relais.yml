@@ -1,0 +1,87 @@
+name: Relais Cryptotidien (Drive vers site)
+
+# Récupère la dernière édition validée déposée par l'agent Rédac
+# dans le dossier Drive public « Relais site public », et la publie.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: relais-cryptotidien
+  cancel-in-progress: false
+
+jobs:
+  relais:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Récupérer la dernière édition sur le Drive
+        env:
+          FOLDER_ID: "1-0RioeKq-cTBwn22GV4zd_xmG9O1Fi50"
+        run: |
+          python3 - <<'PY'
+          import json, os, re, sys, urllib.request
+
+          folder = os.environ["FOLDER_ID"]
+          def get(url):
+              req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return r.read()
+
+          html = get(f"https://drive.google.com/embeddedfolderview?id={folder}").decode("utf-8", "replace")
+          files = {}
+          for m in re.finditer(r'id="entry-([\w-]{20,})"', html):
+              fid = m.group(1)
+              t = re.search(r'flip-entry-title">([^<]+)<', html[m.end():m.end() + 3000])
+              if t:
+                  name = t.group(1).strip()
+                  d = re.fullmatch(r"edition-(\d{4}-\d{2}-\d{2})\.js", name)
+                  if d:
+                      files[fid] = (d.group(1), name)
+          if not files:
+              print("Aucune édition trouvée dans le dossier Drive.")
+              sys.exit(0)
+
+          # Dernière date ; à date égale, on garde l'entrée la plus haute (Drive trie par nom).
+          best_date = max(v[0] for v in files.values())
+          fid = next(k for k, v in files.items() if v[0] == best_date)
+          print("Édition la plus récente :", files[fid][1], fid)
+
+          raw = get(f"https://drive.usercontent.google.com/download?id={fid}&export=download&confirm=t").decode("utf-8")
+
+          # Contrôle : le fichier ne doit contenir que des données.
+          lines = raw.strip().split("\n", 1)
+          if len(lines) != 2 or not lines[0].startswith("/* Édition du jour de Cryptotidien"):
+              sys.exit("En-tête inattendu : rien n'est publié.")
+          body = lines[1].strip()
+          if not (body.startswith("window.CT_EDITION=") and body.endswith(";")):
+              sys.exit("Format inattendu : rien n'est publié.")
+          data = json.loads(body[len("window.CT_EDITION="):-1])
+          ed = data.get("ED", {})
+          if data.get("date") != best_date or len(ed.get("articles", [])) != 4 or len(data.get("BRIEF", [])) != 4:
+              sys.exit("Contenu invalide : rien n'est publié.")
+
+          old = open("edition.js", encoding="utf-8").read() if os.path.exists("edition.js") else ""
+          if old.strip() == raw.strip():
+              print("Le site affiche déjà cette édition.")
+              sys.exit(0)
+          with open("edition.js", "w", encoding="utf-8") as f:
+              f.write(raw)
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+              f.write(f"EDITION_DATE={best_date}\n")
+          PY
+
+      - name: Publier sur le site
+        if: env.EDITION_DATE != ''
+        run: |
+          git config user.name "Cryptotidien"
+          git config user.email "noreply@users.noreply.github.com"
+          git add edition.js
+          git commit -m "Édition du ${EDITION_DATE}"
+          git push

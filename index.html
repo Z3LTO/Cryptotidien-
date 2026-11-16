@@ -343,7 +343,7 @@ footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:f
     <div class="hero-txt">
       <div class="eyebrow" id="hEye">Crypto · Blockchain · Chaque matin</div>
       <h1 id="hTitle">L'essentiel de la crypto, <em>vérifié</em>.</h1>
-      <p class="lead" style="font-size:19px" id="hLead">L'actu du jour recoupée dans plusieurs sources, et un point formation pour vraiment comprendre l'écosystème. Zéro hype, zéro promesse de gains.</p>
+      <p class="lead" style="font-size:19px" id="hLead">Chaque matin, on lit tout, on recoupe et on résume l'actu crypto en 4 infos claires. Zéro hype, zéro promesse de gains.</p>
       <div class="cta" id="heroCta"></div>
 
     </div>
@@ -386,7 +386,7 @@ footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:f
   <div class="wrap">
     <div class="head">
       <div class="eyebrow">Cryptotidien+</div>
-      <h2>Un an pour maîtriser l'écosystème.</h2>
+      <h2>Six mois pour maîtriser l'écosystème.</h2>
       <p class="lead">Chaque matin à 7 h 30, ton édition abonné en ligne : indicateurs, analyse, leçon du jour et outils exclusifs. Chaque mois, un nouveau thème de formation.</p>
     </div>
     <div class="offer">
@@ -399,12 +399,12 @@ footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:f
           <li><span><b>Des outils exclusifs</b> : convertisseur, prix de revient, estimation d'impôt, détecteur d'arnaques.</span></li>
           <li><span><b>Une leçon par jour</b> : 2 à 3 points essentiels résumés en une minute de lecture.</span></li>
           <li><span><b>Un quiz par leçon</b> : 2 à 3 questions pour ancrer ce que tu as appris.</span></li>
-          <li><span><b>Un parcours sur 12 mois</b> : des bases jusqu'à la fiscalité, ta progression est suivie.</span></li>
+          <li><span><b>Un parcours sur 6 mois</b> : des bases jusqu'à la fiscalité, ta progression est suivie.</span></li>
         </ul>
         <div id="offerCta"></div>
       </div>
       <div class="glass">
-        <h3 style="font-size:16px;margin-bottom:14px">Le parcours sur 12 mois</h3>
+        <h3 style="font-size:16px;margin-bottom:14px">Le parcours sur 6 mois</h3>
         <div class="months" id="monthsHome"></div>
       </div>
     </div>
@@ -508,7 +508,7 @@ const LEX=[
  ["ETF Bitcoin","Un fonds coté en bourse qui suit le prix du bitcoin. On l'achète comme une action, sans détenir soi-même de crypto."],
  ["MiCA","Le règlement européen qui encadre les émetteurs et les plateformes crypto. Sans agrément MiCA, une plateforme ne peut plus servir de clients dans l'Union."]];
 
-const MONTHS=["Les bases : blockchain et bitcoin","Wallets et sécurité","Acheter et stocker sans se faire avoir","Ethereum et smart contracts","Les stablecoins","La DeFi","NFT et tokenisation","Lire le marché : cycles, halving, ETF","Les risques : levier, liquidations, arnaques","Régulation : MiCA et AMF","Confidentialité et traçabilité","Fiscalité crypto en France"];
+const MONTHS=["Les bases : blockchain, bitcoin et wallets","Acheter et stocker en sécurité","Ethereum, stablecoins et DeFi","Lire le marché : cycles, halving, ETF","Les risques : levier, liquidations, arnaques","Régulation et fiscalité en France"];
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -605,13 +605,13 @@ function renderHome(){const u=getU();const prem=!!(u&&u.premium);document.body.c
   if(prem){$('hEye').textContent='Cryptotidien+ · Ton tableau de bord';$('hTitle').innerHTML=`Bonjour ${esc(u.prenom)},<br>marché <em>${esc(IND.humeur)}</em> ce matin.`;
     $('hLead').textContent=IND.accroche;renderDash(u);}
   else{$('hEye').textContent='Crypto · Blockchain · Chaque matin';$('hTitle').innerHTML="L'essentiel de la crypto, <em>vérifié</em>.";
-    $('hLead').textContent="L'actu du jour recoupée dans plusieurs sources, et un point formation pour vraiment comprendre l'écosystème. Zéro hype, zéro promesse de gains.";}
+    $('hLead').textContent="Chaque matin, on lit tout, on recoupe et on résume l'actu crypto en 4 infos claires. Zéro hype, zéro promesse de gains.";}
   $('heroCta').innerHTML=u&&u.premium?`<a class="btn lime" href="#dash">Mes indicateurs</a><a class="btn ghost" href="#premium">Ma leçon du jour</a><button class="btn ghost" data-logout>Se déconnecter</button>`
     :`<a class="btn lime" href="#resume">Les actus du jour</a><a class="btn ghost" href="https://www.instagram.com/cryptotidien/" target="_blank" rel="noopener">Suivre sur Instagram</a>`;
   $('offerCta').innerHTML=u&&u.premium?`<a class="btn lime" href="#premium">Accéder à mon espace abonné</a>`:`<button class="btn lime" data-sub>Je m'abonne · 6,99 € / mois</button>`;
   $('monthsHome').innerHTML=monthsHTML(u);
   const s=$('signupHome');
-  if(u){s.innerHTML=`<div class="side"><span class="tag ${u.premium?'':'free'}" style="align-self:flex-start">${u.premium?'Abonné Cryptotidien+':'Compte gratuit'}</span><h2>Content de te revoir, ${esc(u.prenom)}.</h2><p class="lead">${u.premium?'Ta leçon du jour et son quiz t\'attendent dans ton espace abonné.':'Passe à Cryptotidien+ pour ton tableau de bord du matin, une leçon par jour, les outils exclusifs et ton parcours sur 12 mois.'}</p></div>
+  if(u){s.innerHTML=`<div class="side"><span class="tag ${u.premium?'':'free'}" style="align-self:flex-start">${u.premium?'Abonné Cryptotidien+':'Compte gratuit'}</span><h2>Content de te revoir, ${esc(u.prenom)}.</h2><p class="lead">${u.premium?'Ta leçon du jour et son quiz t\'attendent dans ton espace abonné.':'Passe à Cryptotidien+ pour ton tableau de bord du matin, une leçon par jour, les outils exclusifs et ton parcours sur 6 mois.'}</p></div>
     <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">${u.premium?`<a class="btn lime" href="#premium">Ouvrir mon espace abonné</a>`:`<button class="btn lime" data-sub>Je m'abonne · 6,99 € / mois</button>`}<a class="btn ghost" href="#compte">Mon compte</a>${u.premium?'':'<button class="btn demoBtn sm" data-demo>⚡ Accès démo abonné</button>'}</div>`;}
   else{s.innerHTML=`<div class="side"><span class="eyebrow">Gratuit</span><h2>Crée ton compte.</h2><p class="lead">Le résumé chaque matin, le simulateur et le lexique. Tu pourras passer à Cryptotidien+ quand tu veux.</p></div><div>${signupForm('h')}<div class="demoWrap"><button class="btn demoBtn sm" data-demo>⚡ Accès démo abonné</button></div></div>`;bindSignup('h');}
 }
@@ -633,15 +633,15 @@ function renderPremium(){const u=getU(),on=u&&u.premium,L=PREMIUM.lecon,done=on&
     <div class="quiz" id="quizBox"></div>
   </div>
   <div class="glass" style="padding:30px;margin-top:14px">
-    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div class="eyebrow">Ton parcours sur 12 mois</div><span class="fine" id="progTxt"></span></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div class="eyebrow">Ton parcours sur 6 mois</div><span class="fine" id="progTxt"></span></div>
     <div class="prog" style="margin:14px 0 16px"><i id="progBar" style="width:0"></i></div>
     <div class="months">${monthsHTML(u)}</div>
   </div>`;
   if(on){$('prTitle').textContent=`Bonjour ${u.prenom}, voici ton édition complète`;$('prBody').innerHTML=body;qi=0;score=0;quiz();progress();}
   else{$('prTitle').textContent="L'édition complète";
-    $('prBody').innerHTML=`<div class="locked"><div class="blur" aria-hidden="true">${body}</div><div class="gate"><div class="glass"><span class="tag" style="align-self:flex-start">Cryptotidien+</span><h3>Réservé aux abonnés</h3><p class="lead">Les indicateurs du matin, l'analyse, la leçon et son quiz, les outils exclusifs et ton parcours de 12 mois.</p><div class="price" style="margin:0"><b style="font-size:40px">6,99 €</b><span>/ mois, sans engagement</span></div><button class="btn lime" data-sub>Je m'abonne</button>${u?'':'<a class="btn ghost" href="#inscription">Créer d\'abord un compte gratuit</a>'}</div></div></div>`;}
+    $('prBody').innerHTML=`<div class="locked"><div class="blur" aria-hidden="true">${body}</div><div class="gate"><div class="glass"><span class="tag" style="align-self:flex-start">Cryptotidien+</span><h3>Réservé aux abonnés</h3><p class="lead">Les indicateurs du matin, l'analyse, la leçon et son quiz, les outils exclusifs et ton parcours de 6 mois.</p><div class="price" style="margin:0"><b style="font-size:40px">6,99 €</b><span>/ mois, sans engagement</span></div><button class="btn lime" data-sub>Je m'abonne</button>${u?'':'<a class="btn ghost" href="#inscription">Créer d\'abord un compte gratuit</a>'}</div></div></div>`;}
 }
-function progress(){const u=getU();const n=(u.done||[]).length;$('progBar').style.width=Math.min(100,n/365*100)+'%';$('progTxt').textContent=`${n} leçon${n>1?'s':''} validée${n>1?'s':''} sur 365 · mois 1 : ${MONTHS[0]}`;}
+function progress(){const u=getU();const n=(u.done||[]).length;$('progBar').style.width=Math.min(100,n/180*100)+'%';$('progTxt').textContent=`${n} leçon${n>1?'s':''} validée${n>1?'s':''} sur 180 · mois 1 : ${MONTHS[0]}`;}
 function quiz(){const Q=PREMIUM.lecon.quiz,b=$('quizBox');if(!b)return;
   if(qi>=Q.length){const u=getU();if(!(u.done||[]).includes(ED.date)){setU({...u,done:[...(u.done||[]),ED.date]},true);const tg=document.querySelector('#lesson .tag');if(tg){tg.textContent='Leçon validée';tg.classList.remove('free');}}
     b.innerHTML=`<div class="dots">${Q.map(()=>'<i class="on"></i>').join('')}</div><h4>${score} sur ${Q.length}. ${score===Q.length?'Leçon validée sans faute !':'Leçon validée. Relis les points ci-dessus pour bien retenir.'}</h4><div><button class="btn ghost sm" id="again">Refaire le quiz</button></div>`;
@@ -764,9 +764,9 @@ route();
   // le panneau clair : les 4 infos du jour, tirées de l'édition
   try{const E=window.CT_EDITION&&window.CT_EDITION.ED;if(E&&panel){const d=new Date(E.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
       const h=document.createElement('div');h.className='ch';h.innerHTML='<span class="cb"><svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#C6FF3D"/><path d="M52 27 A23 23 0 1 0 52 73" fill="none" stroke="#050507" stroke-width="12"/><path d="M48 33 H82 M65 33 V76" fill="none" stroke="#050507" stroke-width="12"/></svg>Cryptotidien</span><span></span>';h.lastChild.textContent=d;panel.append(h);
-      const k=document.createElement('p');k.className='ck';k.innerHTML='Tout ce bruit, trié en <em>4 infos</em>.';panel.append(k);
+      const k=document.createElement('p');k.className='ck';k.innerHTML='On lit tout. On te résume l\'essentiel en <em>4 infos</em>.';panel.append(k);
       E.articles.slice(0,4).forEach((a,i)=>{const l=document.createElement('a');l.href='#actus-'+(i+1);l.style.transitionDelay=(.15+i*.12)+'s';const n=document.createElement('i');n.textContent='0'+(i+1);const t=document.createElement('b');t.textContent=a.titre;const g=document.createElement('em');g.textContent='→';l.append(n,t,g);panel.append(l);});
-      const f=document.createElement('div');f.className='cf';f.textContent='Recoupées dans plusieurs sources. Zéro hype, zéro promesse de gains.';panel.append(f);}}catch(e){}
+      const f=document.createElement('div');f.className='cf';f.textContent='La synthèse du jour, recoupée dans plusieurs sources.';panel.append(f);}}catch(e){}
   // matière du mur : chiffres abstraits et jargon, volontairement illisibles (aucune donnée réelle)
   const JAR=['RSI','FUD','ATH','TVL','APY','FOMO','PUMP','DUMP','x100 ?','ALERTE','RUMEUR','BREAKING','HODL','LIQ.','OPEN INT.','FUNDING','GAS','MEMPOOL','WHALE','SIGNAL','URGENT','LEVIER','SHORT','LONG','AIRDROP','BULL','BEAR','VOL.','DOM.','???'];
   const rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];

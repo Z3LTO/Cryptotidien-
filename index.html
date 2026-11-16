@@ -82,7 +82,8 @@ section{padding:84px 0}
 .clear{pointer-events:auto;align-self:center;padding:22px 22px 18px;border-radius:26px;background:rgba(10,10,16,.86);border:1px solid rgba(198,255,61,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04) inset;opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
 .clear.on{opacity:1;transform:none}
 .clear .ch{display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding-bottom:12px;border-bottom:1px solid var(--gline)}
-.clear .ch span:last-child{color:var(--mist);letter-spacing:.04em}
+.clear .ch span:last-child{color:var(--mist);letter-spacing:.04em}.clear .cb{display:flex;align-items:center;gap:8px;font-family:var(--display);letter-spacing:-.01em;color:var(--paper)}.clear .ch{align-items:center}
+.clear .ck{margin:16px 0 4px;font-family:var(--display);font-weight:700;font-size:clamp(19px,2vw,25px);line-height:1.15;letter-spacing:-.03em;text-transform:uppercase}.clear .ck em{font-style:normal;color:var(--gold)}
 .clear a{display:grid;grid-template-columns:34px 1fr 18px;gap:8px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gline);text-decoration:none;color:var(--paper);opacity:0;transform:translateX(-10px);transition:opacity .5s,transform .5s,color .15s}
 .clear.on a{opacity:1;transform:none}
 .clear a i{font-style:normal;font-family:var(--display);font-size:12px;color:var(--gold)}
@@ -762,32 +763,44 @@ route();
   const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
   // le panneau clair : les 4 infos du jour, tirées de l'édition
   try{const E=window.CT_EDITION&&window.CT_EDITION.ED;if(E&&panel){const d=new Date(E.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-      const h=document.createElement('div');h.className='ch';h.innerHTML='<span>L\'essentiel du jour</span><span></span>';h.lastChild.textContent=d;panel.append(h);
+      const h=document.createElement('div');h.className='ch';h.innerHTML='<span class="cb"><svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#C6FF3D"/><path d="M52 27 A23 23 0 1 0 52 73" fill="none" stroke="#050507" stroke-width="12"/><path d="M48 33 H82 M65 33 V76" fill="none" stroke="#050507" stroke-width="12"/></svg>Cryptotidien</span><span></span>';h.lastChild.textContent=d;panel.append(h);
+      const k=document.createElement('p');k.className='ck';k.innerHTML='Tout ce bruit, trié en <em>4 infos</em>.';panel.append(k);
       E.articles.slice(0,4).forEach((a,i)=>{const l=document.createElement('a');l.href='#actus-'+(i+1);l.style.transitionDelay=(.15+i*.12)+'s';const n=document.createElement('i');n.textContent='0'+(i+1);const t=document.createElement('b');t.textContent=a.titre;const g=document.createElement('em');g.textContent='→';l.append(n,t,g);panel.append(l);});
-      const f=document.createElement('div');f.className='cf';f.textContent='4 infos vérifiées. Le reste, c\'est du bruit.';panel.append(f);}}catch(e){}
+      const f=document.createElement('div');f.className='cf';f.textContent='Recoupées dans plusieurs sources. Zéro hype, zéro promesse de gains.';panel.append(f);}}catch(e){}
   // matière du mur : chiffres abstraits et jargon, volontairement illisibles (aucune donnée réelle)
   const JAR=['RSI','FUD','ATH','TVL','APY','FOMO','PUMP','DUMP','x100 ?','ALERTE','RUMEUR','BREAKING','HODL','LIQ.','OPEN INT.','FUNDING','GAS','MEMPOOL','WHALE','SIGNAL','URGENT','LEVIER','SHORT','LONG','AIRDROP','BULL','BEAR','VOL.','DOM.','???'];
   const rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];
+  // faux articles : des titres racoleurs génériques et des débuts de phrases non vérifiées (caricature du bruit, aucun fait)
+  const TIT=['CE TOKEN VA-T-IL EXPLOSER ?','10 CRYPTOS À ACHETER MAINTENANT','URGENT : TOUT S\'EFFONDRE ?','LE BITCOIN À 1 MILLION ?','CE QUE LES BALEINES VOUS CACHENT','ACHETER OU VENDRE ? NOTRE AVIS','L\'ALTCOIN QUE PERSONNE N\'A VU VENIR','THREAD 1/47 : LISEZ JUSQU\'AU BOUT','DERNIÈRE CHANCE AVANT LE PUMP','LA FIN DES CRYPTOS ? (ENCORE)','ILS ONT TOUT MISÉ, VOICI POURQUOI','ANALYSE TECHNIQUE : 12 SCÉNARIOS','EXCLUSIF : UNE SOURCE ANONYME AFFIRME','ALERTE ROUGE SUR LE MARCHÉ','POURQUOI TOUT LE MONDE EN PARLE','LE SIGNAL QUE VOUS ATTENDIEZ'];
+  const TXT=['selon une rumeur non confirmée, le marché pourrait','des analystes anonymes estiment désormais que','à en croire un message devenu viral cette nuit,','plusieurs comptes influents affirment sans preuve','un graphique partagé des milliers de fois suggère','personne ne sait vraiment, mais beaucoup pensent','d\'après un expert autoproclamé, il faudrait','les avis divergent, pourtant certains promettent','une capture d\'écran non sourcée laisse entendre','mise à jour : l\'information serait finalement'];
   const num=()=>{const k=Math.random();return k<.3?(Math.random()*99999|0).toLocaleString('fr-FR'):k<.55?(Math.random()<.5?'+':'−')+rnd(0,99).toFixed(2):k<.75?'0x'+(Math.random()*0xffffff|0).toString(16).padStart(6,'0'):k<.9?rnd(0,9).toFixed(4):(Math.random()*999|0)+'K';};
   let W=0,H=0,cols=[];
   function build(){const r=box.getBoundingClientRect();if(!r.width||!r.height)return;const d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);
-    const cw=W<700?74:92,n=Math.ceil(W/cw)+1;cols=[];
-    for(let c=0;c<n;c++){const items=[];let y=0;while(y<H*2.2){const k=Math.random();const t=k<.6?'n':k<.78?'w':k<.9?'s':'b';const h=t==='s'?34:t==='b'?26:18;
+    cols=[];let cx=-10,c=0;
+    while(cx<W+20){const art=c%3===1,cw=art?(W<700?150:196):(W<700?74:92);const items=[];let y=0;
+      if(art){while(y<H*2.2){const tl=[];let line='';pick(TIT).replace(/ ([?:])/g,'\u00a0$1').split(' ').forEach(w=>{if((line+' '+w).length>(W<700?17:22)){tl.push(line);line=w;}else line=line?line+' '+w:w;});tl.push(line);
+          const body=Array.from({length:3+(Math.random()*3|0)},()=>pick(TXT));const h=tl.length*15+body.length*12+(Math.random()<.4?44:0)+8;
+          items.push({t:'a',y,h,tl,body,img:h-(tl.length*15+body.length*12+8)>0,hot:Math.random()<.18?1:0,fl:0,nx:0});y+=h+rnd(14,26);}
+        cols.push({x:cx,w:cw-18,sp:rnd(5,12)*(c%2?1:-1),items,len:y,off:rnd(0,y)});cx+=cw;c++;continue;}
+      while(y<H*2.2){const k=Math.random();const t=k<.6?'n':k<.78?'w':k<.9?'s':'b';const h=t==='s'?34:t==='b'?26:18;
           items.push({t,y,h,v:t==='n'?num():t==='w'?pick(JAR):null,pts:t==='s'?Array.from({length:9},()=>Math.random()):null,bars:t==='b'?Array.from({length:7},()=>Math.random()):null,
             hot:Math.random()<.07?(Math.random()<.5?1:2):0,fl:Math.random()<.35?rnd(.4,2.2):0,nx:rnd(0,3)});y+=h+rnd(4,10);}
-      cols.push({x:c*cw+rnd(-6,6),sp:rnd(6,22)*(c%2?1:-1),items,len:y,off:rnd(0,y)});}}
+      cols.push({x:cx+rnd(-4,4),sp:rnd(6,22)*(c%2?1:-1),items,len:y,off:rnd(0,y)});cx+=cw;c++;}}
   const CYC=16,SW=1.5;
   function draw(t,dt){if(!W)return;x.clearRect(0,0,W,H);
     // cycle : le bruit remonte, puis le balayage le calme
     const ct=still?6:t%CYC;const sweep=still?2:Math.min(1,ct/SW),sx=-80+(W+160)*sweep,rise=ct>CYC-5?(ct-(CYC-5))/5:0;
     const loud=.24+.62*rise*rise;x.textBaseline='top';
     for(const c of cols){c.off=(c.off+c.sp*dt*(.35+rise*1.4)+c.len)%c.len;
-      for(const it of c.items){let y=it.y-c.off;if(y<-40)y+=c.len;if(y>H+10)continue;
+      for(const it of c.items){let y=it.y-c.off;if(y<-(it.h+10))y+=c.len;if(y>H+10)continue;
         if(it.fl&&it.t==='n'){it.nx-=dt;if(it.nx<0){it.v=num();it.nx=it.fl;}}
         const calm=c.x<sx-20?1:c.x>sx+60?0:(sx+60-c.x)/80; // 1 = déjà balayé
         const a=(ct<SW?(.9*(1-calm)+.24*calm):loud)*(it.hot?1:.8);
         const col=it.hot===1?`rgba(255,107,107,${a})`:it.hot===2?`rgba(198,255,61,${a})`:`rgba(160,150,210,${a*.8})`;
-        if(it.t==='n'||it.t==='w'){x.font=(it.t==='w'?'700 ':'500 ')+(it.t==='w'?11:12)+'px ui-monospace,Menlo,Consolas,monospace';x.fillStyle=col;x.fillText(it.v,c.x,y);}
+        if(it.t==='a'){let yy=y;if(it.img){x.fillStyle=`rgba(160,150,210,${a*.16})`;x.fillRect(c.x,yy,c.w,38);yy+=44;}
+          x.font='800 12px system-ui,-apple-system,Segoe UI,sans-serif';x.fillStyle=it.hot?`rgba(255,107,107,${a})`:`rgba(235,232,250,${a*.95})`;it.tl.forEach(l=>{x.fillText(l,c.x,yy);yy+=15;});
+          x.font='400 9.5px system-ui,-apple-system,Segoe UI,sans-serif';x.fillStyle=`rgba(160,150,210,${a*.7})`;it.body.forEach(l=>{x.fillText(l,c.x,yy+2,c.w);yy+=12;});}
+        else if(it.t==='n'||it.t==='w'){x.font=(it.t==='w'?'700 ':'500 ')+(it.t==='w'?11:12)+'px ui-monospace,Menlo,Consolas,monospace';x.fillStyle=col;x.fillText(it.v,c.x,y);}
         else if(it.t==='s'){x.strokeStyle=col;x.lineWidth=1.2;x.beginPath();it.pts.forEach((p,k)=>{const px=c.x+k*8,py=y+4+p*24;k?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();}
         else{x.fillStyle=col;it.bars.forEach((b,k)=>x.fillRect(c.x+k*9,y+22-b*20,5,b*20));}}}
     // la barre de lumière du balayage

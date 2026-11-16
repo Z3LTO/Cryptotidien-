@@ -77,12 +77,24 @@ section{padding:84px 0}
 
 /* hero */
 #hero{position:relative;min-height:min(720px,88svh);display:flex;align-items:flex-start;overflow:hidden;background:radial-gradient(55% 60% at 80% 45%,rgba(139,92,255,.22) 0%,transparent 62%)}
-#motion{position:absolute;inset:0;pointer-events:none}#motion.nogl{display:none}
+#motion{position:absolute;inset:0;pointer-events:none;overflow:hidden;perspective:1100px}
+#hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(5,5,7,.86) 0%,rgba(5,5,7,.66) 34%,rgba(5,5,7,.22) 62%,rgba(5,5,7,.3) 100%)}
+.clear{pointer-events:auto;align-self:center;padding:22px 22px 18px;border-radius:26px;background:rgba(10,10,16,.86);border:1px solid rgba(198,255,61,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04) inset;opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.clear.on{opacity:1;transform:none}
+.clear .ch{display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding-bottom:12px;border-bottom:1px solid var(--gline)}
+.clear .ch span:last-child{color:var(--mist);letter-spacing:.04em}
+.clear a{display:grid;grid-template-columns:34px 1fr 18px;gap:8px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gline);text-decoration:none;color:var(--paper);opacity:0;transform:translateX(-10px);transition:opacity .5s,transform .5s,color .15s}
+.clear.on a{opacity:1;transform:none}
+.clear a i{font-style:normal;font-family:var(--display);font-size:12px;color:var(--gold)}
+.clear a b{font-weight:700;font-size:16.5px;line-height:1.3}
+.clear a em{font-style:normal;color:var(--mist);transition:transform .15s,color .15s}
+.clear a:hover em{transform:translateX(4px);color:var(--gold)}
+.clear .cf{padding-top:12px;font-size:13px;color:var(--mist)}
 #hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,transparent,var(--deep));pointer-events:none}
-#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+#scene{position:absolute;inset:-12% -6%;width:112%;height:124%;display:block;transform:rotateY(-16deg) rotateX(5deg);transform-origin:70% 50%}
 #hero .wrap{position:relative;width:100%;pointer-events:none;padding-top:108px;padding-bottom:64px;align-self:center}
-@media (min-width:1001px){.hero-txt{max-width:min(600px,50%)}h1{font-size:clamp(34px,4.4vw,66px)}}
-@media (max-width:1000px){#hero{display:block;min-height:0}#hero .wrap{padding-bottom:150px}}
+@media (min-width:1001px){#hero .wrap{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:44px;align-items:center}.hero-txt{max-width:none}h1{font-size:clamp(34px,4.4vw,66px)}}
+@media (max-width:1000px){#hero{display:block;min-height:0}#hero .wrap{padding-bottom:70px}.clear{margin-top:30px}#hero::before{background:linear-gradient(180deg,rgba(5,5,7,.78) 0%,rgba(5,5,7,.66) 55%,rgba(5,5,7,.45) 100%)}#scene{transform:rotateX(8deg)}}
 .hero-txt{max-width:600px;display:flex;flex-direction:column;gap:22px;pointer-events:auto}
 h1{font-size:clamp(34px,6vw,78px);line-height:1;font-weight:800;text-transform:uppercase}
 h1 em{font-style:normal;background:linear-gradient(90deg,var(--gold),#7CFFB2 45%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -90,7 +102,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--gold),#7CFFB2 45%
 .mine{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(17,17,25,.55);backdrop-filter:blur(8px);max-width:440px}
 .mine small{color:var(--mist);font-size:13.5px;line-height:1.45}
 .mine code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--gold);overflow-wrap:anywhere}
-#hero .wrap{z-index:1}
+#hero .wrap{z-index:2}
 .wtip{position:absolute;right:20px;bottom:18px;z-index:2;font-size:12.5px;color:var(--mist);background:rgba(10,10,16,.6);border:1px solid var(--gline);padding:5px 12px;border-radius:999px;pointer-events:none;backdrop-filter:blur(8px)}
 .tmob{display:none}
 @media (max-width:820px){.tdesk{display:none}.tmob{display:inline}.wtip{top:330px;bottom:auto;right:50%;transform:translateX(50%);white-space:nowrap}}
@@ -231,7 +243,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (max-width:820px){
   section{padding:60px 0}
   #hero{display:block;min-height:0}
-  #hero .wrap{padding-top:96px;padding-bottom:150px}
+  #hero .wrap{padding-top:96px;padding-bottom:70px}
   .offer,.signup,.pgrid{grid-template-columns:1fr}
   .months{grid-template-columns:repeat(2,1fr)}
   .sim .out{border-left:0;border-top:1px solid var(--gline)}
@@ -334,6 +346,7 @@ footer a{color:var(--mist)}footer a:hover{color:var(--gold)}footer nav{display:f
       <div class="cta" id="heroCta"></div>
 
     </div>
+    <aside class="clear" id="clear" aria-label="L'essentiel du jour"></aside>
   </div>
 </header>
 <div class="ticker" aria-label="Chiffres du jour"><div id="tick"></div></div>
@@ -744,60 +757,47 @@ document.addEventListener('pointermove',e=>{const s=e.target.closest&&e.target.c
 route();
 </script>
 <script>
-// ---------- Fond du héros : soie liquide en WebGL, rendue à la résolution native de l'écran ----------
-(()=>{const box=document.getElementById('motion'),cv=document.getElementById('scene');if(!box||!cv)return;
-  const gl=cv.getContext('webgl',{antialias:false,alpha:false,powerPreference:'high-performance'});if(!gl){box.classList.add('nogl');return;}
+// ---------- Fond du héros : le mur de données (le bruit), puis le balayage qui fait le tri (l'essentiel) ----------
+(()=>{const box=document.getElementById('motion'),cv=document.getElementById('scene'),panel=document.getElementById('clear');if(!box||!cv)return;const x=cv.getContext('2d');if(!x)return;
   const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const VS='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-  const FS=`precision highp float;uniform vec2 uR;uniform float uT;uniform float uP;
-float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.-15.)+10.);
-  return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
-float fbm2(vec2 p){return noise(p)*.65+noise(p*2.03+7.1)*.35;}
-float fbm3(vec2 p){return noise(p)*.55+noise(p*2.02+3.7)*.3+noise(p*4.1+9.2)*.15;}
-float height(vec2 p){float t=uT;
-  vec2 w=vec2(fbm2(p*.55+vec2(0.,t*.035)),fbm2(p*.55+vec2(5.2,-t*.028)));
-  p+=(w-.5)*2.4;
-  return sin(p.x*1.25+p.y*.85+t*.10)*.55+sin(p.y*1.9-p.x*.55-t*.075)*.38+fbm3(p*1.15+t*.02)*.55+sin(p.x*4.6-p.y*3.1+t*.06)*.07;}
-void main(){vec2 f=gl_FragCoord.xy,q=f/uR,uv=(f-.5*uR)/uR.y;vec2 p=uv*mix(1.55,1.15,uP)+vec2(1.3,.4)+uP*vec2(1.0,.75);
-  float e=.004;float h=height(p);
-  float hx=height(p+vec2(e,0.))-height(p-vec2(e,0.)),hy=height(p+vec2(0.,e))-height(p-vec2(0.,e));
-  vec3 n=normalize(vec3(-hx/(2.*e)*.42,-hy/(2.*e)*.42,1.)),v=vec3(0.,0.,1.);
-  vec3 L1=normalize(vec3(.55,.62,.55)),L2=normalize(vec3(-.75,-.35,.45));
-  vec3 vio=vec3(.50,.30,1.),lim=vec3(.78,1.,.24),mint=vec3(.42,1.,.72);
-  float d1=max(dot(n,L1),0.),d2=max(dot(n,L2),0.);
-  float s1=pow(max(dot(reflect(-L1,n),v),0.),70.),s2=pow(max(dot(reflect(-L2,n),v),0.),90.);
-  float fr=pow(1.-n.z,1.6);
-  vec3 col=vec3(.012,.010,.022);
-  col+=vio*pow(d1,2.2)*.46;col+=lim*pow(d2,4.)*.09;
-  col+=mix(vio,mint,smoothstep(.2,1.,sin(h*3.+1.)))*fr*.5;
-  col+=vec3(1.,.97,1.)*s1*.9+lim*s2*1.25;
-  col*=.55+.45*smoothstep(-.9,.9,h);
-  float m=mix(smoothstep(.12,.72,q.x),smoothstep(.62,.28,q.y)*.94+.06,uP);
-  col*=mix(.10,1.,m);
-  col*=smoothstep(0.,mix(.22,.07,uP),q.y)*.9+.1;col*=1.-.35*pow(length(q-mix(vec2(.62,.5),vec2(.5,.2),uP))*1.15,2.2);
-  col=col/(1.+col*.6);col=pow(col,vec3(.92));
-  col+=(hash(f+fract(uT)*61.)-.5)*.028;
-  gl_FragColor=vec4(max(col,0.),1.);}`;
-  const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return gl.getShaderParameter(o,gl.COMPILE_STATUS)?o:null;};
-  const v=sh(gl.VERTEX_SHADER,VS),f=sh(gl.FRAGMENT_SHADER,FS),pr=gl.createProgram();if(!v||!f){box.classList.add('nogl');return;}
-  gl.attachShader(pr,v);gl.attachShader(pr,f);gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){box.classList.add('nogl');return;}
-  gl.useProgram(pr);gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-  const la=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(la);gl.vertexAttribPointer(la,2,gl.FLOAT,false,0,0);
-  const uR=gl.getUniformLocation(pr,'uR'),uT=gl.getUniformLocation(pr,'uT'),uP=gl.getUniformLocation(pr,'uP');
-  let scale=Math.min(devicePixelRatio||1,2),W=0,H=0;
-  function size(){const r=box.getBoundingClientRect();if(!r.width||!r.height)return;W=Math.round(r.width*scale);H=Math.round(r.height*scale);cv.width=W;cv.height=H;gl.viewport(0,0,W,H);
-    gl.uniform2f(uR,W,H);gl.uniform1f(uP,r.width<1001?1:0);}
-  const draw=t=>{if(!W)return;gl.uniform1f(uT,t);gl.drawArrays(gl.TRIANGLES,0,3);};
-  new ResizeObserver(()=>{size();if(still)draw(40);}).observe(box);size();
-  cv.addEventListener('webglcontextlost',e=>{e.preventDefault();box.classList.add('nogl');});
-  if(still){draw(40);return;}
+  // le panneau clair : les 4 infos du jour, tirées de l'édition
+  try{const E=window.CT_EDITION&&window.CT_EDITION.ED;if(E&&panel){const d=new Date(E.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+      const h=document.createElement('div');h.className='ch';h.innerHTML='<span>L\'essentiel du jour</span><span></span>';h.lastChild.textContent=d;panel.append(h);
+      E.articles.slice(0,4).forEach((a,i)=>{const l=document.createElement('a');l.href='#actus-'+(i+1);l.style.transitionDelay=(.15+i*.12)+'s';const n=document.createElement('i');n.textContent='0'+(i+1);const t=document.createElement('b');t.textContent=a.titre;const g=document.createElement('em');g.textContent='→';l.append(n,t,g);panel.append(l);});
+      const f=document.createElement('div');f.className='cf';f.textContent='4 infos vérifiées. Le reste, c\'est du bruit.';panel.append(f);}}catch(e){}
+  // matière du mur : chiffres abstraits et jargon, volontairement illisibles (aucune donnée réelle)
+  const JAR=['RSI','FUD','ATH','TVL','APY','FOMO','PUMP','DUMP','x100 ?','ALERTE','RUMEUR','BREAKING','HODL','LIQ.','OPEN INT.','FUNDING','GAS','MEMPOOL','WHALE','SIGNAL','URGENT','LEVIER','SHORT','LONG','AIRDROP','BULL','BEAR','VOL.','DOM.','???'];
+  const rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];
+  const num=()=>{const k=Math.random();return k<.3?(Math.random()*99999|0).toLocaleString('fr-FR'):k<.55?(Math.random()<.5?'+':'−')+rnd(0,99).toFixed(2):k<.75?'0x'+(Math.random()*0xffffff|0).toString(16).padStart(6,'0'):k<.9?rnd(0,9).toFixed(4):(Math.random()*999|0)+'K';};
+  let W=0,H=0,cols=[];
+  function build(){const r=box.getBoundingClientRect();if(!r.width||!r.height)return;const d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);
+    const cw=W<700?74:92,n=Math.ceil(W/cw)+1;cols=[];
+    for(let c=0;c<n;c++){const items=[];let y=0;while(y<H*2.2){const k=Math.random();const t=k<.6?'n':k<.78?'w':k<.9?'s':'b';const h=t==='s'?34:t==='b'?26:18;
+          items.push({t,y,h,v:t==='n'?num():t==='w'?pick(JAR):null,pts:t==='s'?Array.from({length:9},()=>Math.random()):null,bars:t==='b'?Array.from({length:7},()=>Math.random()):null,
+            hot:Math.random()<.07?(Math.random()<.5?1:2):0,fl:Math.random()<.35?rnd(.4,2.2):0,nx:rnd(0,3)});y+=h+rnd(4,10);}
+      cols.push({x:c*cw+rnd(-6,6),sp:rnd(6,22)*(c%2?1:-1),items,len:y,off:rnd(0,y)});}}
+  const CYC=16,SW=1.5;
+  function draw(t,dt){if(!W)return;x.clearRect(0,0,W,H);
+    // cycle : le bruit remonte, puis le balayage le calme
+    const ct=still?6:t%CYC;const sweep=still?2:Math.min(1,ct/SW),sx=-80+(W+160)*sweep,rise=ct>CYC-5?(ct-(CYC-5))/5:0;
+    const loud=.24+.62*rise*rise;x.textBaseline='top';
+    for(const c of cols){c.off=(c.off+c.sp*dt*(.35+rise*1.4)+c.len)%c.len;
+      for(const it of c.items){let y=it.y-c.off;if(y<-40)y+=c.len;if(y>H+10)continue;
+        if(it.fl&&it.t==='n'){it.nx-=dt;if(it.nx<0){it.v=num();it.nx=it.fl;}}
+        const calm=c.x<sx-20?1:c.x>sx+60?0:(sx+60-c.x)/80; // 1 = déjà balayé
+        const a=(ct<SW?(.9*(1-calm)+.24*calm):loud)*(it.hot?1:.8);
+        const col=it.hot===1?`rgba(255,107,107,${a})`:it.hot===2?`rgba(198,255,61,${a})`:`rgba(160,150,210,${a*.8})`;
+        if(it.t==='n'||it.t==='w'){x.font=(it.t==='w'?'700 ':'500 ')+(it.t==='w'?11:12)+'px ui-monospace,Menlo,Consolas,monospace';x.fillStyle=col;x.fillText(it.v,c.x,y);}
+        else if(it.t==='s'){x.strokeStyle=col;x.lineWidth=1.2;x.beginPath();it.pts.forEach((p,k)=>{const px=c.x+k*8,py=y+4+p*24;k?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();}
+        else{x.fillStyle=col;it.bars.forEach((b,k)=>x.fillRect(c.x+k*9,y+22-b*20,5,b*20));}}}
+    // la barre de lumière du balayage
+    if(ct<SW&&!still){const g=x.createLinearGradient(sx-140,0,sx+14,0);g.addColorStop(0,'rgba(198,255,61,0)');g.addColorStop(.85,'rgba(198,255,61,.16)');g.addColorStop(1,'rgba(230,255,160,.9)');x.fillStyle=g;x.fillRect(sx-140,0,154,H);}
+    if(panel&&(still||t>.9))panel.classList.add('on');}
+  new ResizeObserver(()=>{build();if(still)draw(6,0);}).observe(box);build();
+  if(still){draw(6,0);return;}
   let vis=true;new IntersectionObserver(en=>vis=en[0].isIntersecting).observe(box);
-  // garde la fluidité : si l'appareil peine, on baisse un peu la définition (jamais sous 1x)
-  let last=0,slow=0,n=0;const t0=performance.now();
-  (function loop(now){requestAnimationFrame(loop);if(!vis||document.hidden||box.closest('[hidden]')){last=0;return;}
-    if(last){const dt=now-last;n++;if(n>20&&dt>30)slow++;else if(dt<22)slow=Math.max(0,slow-1);if(slow>25&&scale>1){scale=Math.max(1,scale-.25);slow=0;size();}}
-    last=now;draw(40+(now-t0)/1000);})(t0);
+  let last=0,T=CYC-2.2; // on arrive en plein bruit, le premier balayage part au bout de 2 secondes
+  (function f(n){requestAnimationFrame(f);if(!vis||document.hidden||box.closest('[hidden]')){last=0;return;}const dt=last?Math.min(.05,(n-last)/1000):0;last=n;T+=dt;draw(T,dt);})(performance.now());
 })();
 </script>
 

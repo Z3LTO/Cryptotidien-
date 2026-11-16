@@ -79,8 +79,17 @@ section{padding:84px 0}
 #hero{position:relative;min-height:min(720px,88svh);display:flex;align-items:flex-start;overflow:hidden;background:radial-gradient(55% 60% at 80% 45%,rgba(139,92,255,.22) 0%,transparent 62%)}
 #motion{position:absolute;inset:0;pointer-events:none;overflow:hidden;perspective:1100px}
 #hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(5,5,7,.86) 0%,rgba(5,5,7,.66) 34%,rgba(5,5,7,.22) 62%,rgba(5,5,7,.3) 100%)}
-.clear{pointer-events:auto;align-self:center;padding:22px 22px 18px;border-radius:26px;background:rgba(10,10,16,.86);border:1px solid rgba(198,255,61,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04) inset;opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
-.clear.on{opacity:1;transform:none}
+.clear{position:relative;pointer-events:auto;align-self:center;padding:22px 22px 18px;border-radius:26px;background:rgba(10,10,16,.86);border:1px solid rgba(198,255,61,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04) inset;opacity:0;transform:translateY(18px) scale(.94);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1),filter .9s,border-color .9s,box-shadow .9s}
+.clear.on{opacity:1;transform:none;border-color:rgba(198,255,61,.6);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04) inset,0 0 90px -14px rgba(198,255,61,.42)}
+.clear.dim{opacity:.5;transform:scale(.972);filter:saturate(.35);border-color:rgba(255,107,107,.35);box-shadow:none}
+.clear.hit{animation:sol 1s cubic-bezier(.2,.9,.2,1)}
+@keyframes sol{0%{transform:scale(.94)}40%{transform:scale(1.03);border-color:#e6ffa0;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 2px rgba(198,255,61,.5),0 0 150px 0 rgba(198,255,61,.6)}100%{transform:none}}
+.clear::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(230,255,160,.28) 50%,transparent 60%) no-repeat;background-size:260% 100%;background-position:130% 0;opacity:0}
+.clear.hit::after{animation:sheen 1.1s ease-out}
+@keyframes sheen{0%{opacity:1;background-position:130% 0}100%{opacity:1;background-position:-60% 0}}
+.clear .cs{position:absolute;top:-13px;left:20px;padding:5px 11px;border-radius:99px;background:var(--gold);color:#050507;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transition:background .6s,color .6s}
+.clear.dim .cs{background:#ff6b6b;color:#fff}
+.clear.dim a{opacity:.35;transform:translateX(-10px)}
 .clear .ch{display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding-bottom:12px;border-bottom:1px solid var(--gline)}
 .clear .ch span:last-child{color:var(--mist);letter-spacing:.04em}.clear .cb{display:flex;align-items:center;gap:8px;font-family:var(--display);letter-spacing:-.01em;color:var(--paper)}.clear .ch{align-items:center}
 .clear .ck{margin:16px 0 4px;font-family:var(--display);font-weight:700;font-size:clamp(19px,2vw,25px);line-height:1.15;letter-spacing:-.03em;text-transform:uppercase}.clear .ck em{font-style:normal;color:var(--gold)}
@@ -763,7 +772,7 @@ route();
   const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
   // le panneau clair : les 4 infos du jour, tirées de l'édition
   try{const E=window.CT_EDITION&&window.CT_EDITION.ED;if(E&&panel){const d=new Date(E.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-      const h=document.createElement('div');h.className='ch';h.innerHTML='<span class="cb"><svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#C6FF3D"/><path d="M52 27 A23 23 0 1 0 52 73" fill="none" stroke="#050507" stroke-width="12"/><path d="M48 33 H82 M65 33 V76" fill="none" stroke="#050507" stroke-width="12"/></svg>Cryptotidien</span><span></span>';h.lastChild.textContent=d;panel.append(h);
+      const cs=document.createElement('span');cs.className='cs';cs.textContent='✓ Le tri est fait';panel.append(cs);const h=document.createElement('div');h.className='ch';h.innerHTML='<span class="cb"><svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#C6FF3D"/><path d="M52 27 A23 23 0 1 0 52 73" fill="none" stroke="#050507" stroke-width="12"/><path d="M48 33 H82 M65 33 V76" fill="none" stroke="#050507" stroke-width="12"/></svg>Cryptotidien</span><span></span>';h.lastChild.textContent=d;panel.append(h);
       const k=document.createElement('p');k.className='ck';k.innerHTML='On lit tout. On te résume l\'essentiel en <em>4 infos</em>.';panel.append(k);
       E.articles.slice(0,4).forEach((a,i)=>{const l=document.createElement('a');l.href='#actus-'+(i+1);l.style.transitionDelay=(.15+i*.12)+'s';const n=document.createElement('i');n.textContent='0'+(i+1);const t=document.createElement('b');t.textContent=a.titre;const g=document.createElement('em');g.textContent='→';l.append(n,t,g);panel.append(l);});
       const f=document.createElement('div');f.className='cf';f.textContent='La synthèse du jour, recoupée dans plusieurs sources.';panel.append(f);}}catch(e){}
@@ -774,8 +783,9 @@ route();
   const TIT=['CE TOKEN VA-T-IL EXPLOSER ?','10 CRYPTOS À ACHETER MAINTENANT','URGENT : TOUT S\'EFFONDRE ?','LE BITCOIN À 1 MILLION ?','CE QUE LES BALEINES VOUS CACHENT','ACHETER OU VENDRE ? NOTRE AVIS','L\'ALTCOIN QUE PERSONNE N\'A VU VENIR','THREAD 1/47 : LISEZ JUSQU\'AU BOUT','DERNIÈRE CHANCE AVANT LE PUMP','LA FIN DES CRYPTOS ? (ENCORE)','ILS ONT TOUT MISÉ, VOICI POURQUOI','ANALYSE TECHNIQUE : 12 SCÉNARIOS','EXCLUSIF : UNE SOURCE ANONYME AFFIRME','ALERTE ROUGE SUR LE MARCHÉ','POURQUOI TOUT LE MONDE EN PARLE','LE SIGNAL QUE VOUS ATTENDIEZ'];
   const TXT=['selon une rumeur non confirmée, le marché pourrait','des analystes anonymes estiment désormais que','à en croire un message devenu viral cette nuit,','plusieurs comptes influents affirment sans preuve','un graphique partagé des milliers de fois suggère','personne ne sait vraiment, mais beaucoup pensent','d\'après un expert autoproclamé, il faudrait','les avis divergent, pourtant certains promettent','une capture d\'écran non sourcée laisse entendre','mise à jour : l\'information serait finalement'];
   const num=()=>{const k=Math.random();return k<.3?(Math.random()*99999|0).toLocaleString('fr-FR'):k<.55?(Math.random()<.5?'+':'−')+rnd(0,99).toFixed(2):k<.75?'0x'+(Math.random()*0xffffff|0).toString(16).padStart(6,'0'):k<.9?rnd(0,9).toFixed(4):(Math.random()*999|0)+'K';};
-  let W=0,H=0,cols=[];
-  function build(){const r=box.getBoundingClientRect();if(!r.width||!r.height)return;const d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);
+  let W=0,H=0,cols=[],hitX=0,st='';const pill=()=>panel&&panel.querySelector('.cs');
+  function setSt(n){if(!panel||st===n)return;st=n;const p=pill();if(n==='dim'){panel.classList.add('dim');panel.classList.remove('hit');if(p)p.textContent='Trop d\'infos, trop de bruit';}else{panel.classList.remove('dim','hit');void panel.offsetWidth;panel.classList.add('on','hit');if(p)p.textContent='✓ Le tri est fait';}}
+  function build(){const r=box.getBoundingClientRect();if(!r.width||!r.height)return;const d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;if(panel){const q=panel.getBoundingClientRect();hitX=Math.max(0,q.left-r.left+q.width*.2);}cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);
     cols=[];let cx=-10,c=0;
     while(cx<W+20){const art=c%3===1,cw=art?(W<700?150:196):(W<700?74:92);const items=[];let y=0;
       if(art){while(y<H*2.2){const tl=[];let line='';pick(TIT).replace(/ ([?:])/g,'\u00a0$1').split(' ').forEach(w=>{if((line+' '+w).length>(W<700?17:22)){tl.push(line);line=w;}else line=line?line+' '+w:w;});tl.push(line);
@@ -805,7 +815,7 @@ route();
         else{x.fillStyle=col;it.bars.forEach((b,k)=>x.fillRect(c.x+k*9,y+22-b*20,5,b*20));}}}
     // la barre de lumière du balayage
     if(ct<SW&&!still){const g=x.createLinearGradient(sx-140,0,sx+14,0);g.addColorStop(0,'rgba(198,255,61,0)');g.addColorStop(.85,'rgba(198,255,61,.16)');g.addColorStop(1,'rgba(230,255,160,.9)');x.fillStyle=g;x.fillRect(sx-140,0,154,H);}
-    if(panel&&(still||t>.9))panel.classList.add('on');}
+    if(still){if(panel)panel.classList.add('on');}else if(ct<SW+1&&sx>=hitX)setSt('on');else if(rise>.14&&st==='on')setSt('dim');}
   new ResizeObserver(()=>{build();if(still)draw(6,0);}).observe(box);build();
   if(still){draw(6,0);return;}
   let vis=true;new IntersectionObserver(en=>vis=en[0].isIntersecting).observe(box);
